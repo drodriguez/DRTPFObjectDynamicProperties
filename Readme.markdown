@@ -1,6 +1,12 @@
 # DRTPFObjectDynamicProperties
 
-TODO
+[Parse](https://parse.com) framework provides `PFObject` as the base class for their BaSS solution. Unfortunately they don’t provide ready to use solution for subclassing their object, declaring some `@dynamic` properties and using the setters and getters instead of their *pseudo*-NSDictionary interface, as Core Data does under the hood. This leads to code that’s not easily read and in many cases to ugly SOP (String Oriented Programming).
+
+This project aims to provide several facilities to make your live easier:
+
+- Subclasses of PFObject can use `initWithAutoClassName` to use the class name as the `PFObject` `className`.
+- Every property declared as `@dynamic` in your subclass implementation will be provided a standard getter and setter that uses the `PFObject` interface for you.
+- Your subclasses will automatically get type checking by the compiler, auto-completion by the editor and a more readable syntax.
 
 ## How to use
 
@@ -22,7 +28,49 @@ TODO
 
 ### Using
 
-TODO
+Create your subclass of `PFObject` and declare its properties as you will normally do.
+
+``` objective-c
+#import <Parse/Parse.h>
+
+@interface MYDocument : PFObject
+
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, strong) NSNumber *countOfPages;
+
+@end
+
+```
+
+In your implementation simply declare those properties as `@dynamic` and import `DRTPFObject+DynamicProperties.h`. If you want to use your own class name as the `PFObject` `className`, invoke `initWithAutoClassName` in your initializers.
+
+``` objective-c
+#import "MYDocument.h"
+#import "DRTPFObject+DynamicProperties.h"
+
+@implementation MYDocument
+
+@dynamic title;
+@dynamic countOfPages;
+
+- (id)init
+{
+    return [self initWithAutoClassName];
+}
+
+@end
+```
+
+And finally use your object as you will normally do. You can mix `PFObject` and properties as you will.
+
+``` objective-c
+MYDocument *document = [MYDocument init];
+document.title = @"My awesome document";
+document.countOfPages = @42;
+[document save];
+
+NSLog("The document is titled %@ and has %@ pages", document.title, document.countOfPages);
+```
 
 ## Requirements
 
@@ -35,9 +83,10 @@ To set a compiler flag in Xcode, go to your desidered target and select the “B
 ## TODO
 
 - Generate the getter and the setter names according to the property attributes (the name mangling will become much more complicated).
-- Don't generate the setter if the property is read only (but who wants a PFObject property which is read only?).
+- Don’t generate the setter if the property is read only (but who wants a PFObject property which is read only?).
 - Deal with subclasses of the consumer properly.
 - Maybe try to make autoboxing/unboxing easier for the consumer.
+- Avoid crashing with methods that are already there.
 
 ## Credits & Contact
 
