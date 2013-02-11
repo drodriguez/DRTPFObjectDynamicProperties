@@ -148,12 +148,29 @@ static IMP DRTSetterIMPFromPropertyAttributes(BOOL isStrong, BOOL isCopy, BOOL i
   }
 }
 
-+ (void)initialize
++ (void)load
 {
-  // FIXME: we don't care about subclasses of our own objects
+  @autoreleasepool {
+    SEL originalSelector = @selector(initialize);
+    SEL aliasSelector = @selector(drt_initialize);
+    Class metaclass = object_getClass(self);
+    Method originalMethod = class_getInstanceMethod(metaclass, originalSelector);
+    if (originalMethod) {
+      Method aliasMethod = class_getInstanceMethod(metaclass, aliasSelector);
+      class_addMethod(metaclass, originalSelector, class_getMethodImplementation(metaclass, originalSelector), method_getTypeEncoding(originalMethod));
+      class_addMethod(metaclass, aliasSelector, class_getMethodImplementation(metaclass, aliasSelector), method_getTypeEncoding(aliasMethod));
+      method_exchangeImplementations(class_getInstanceMethod(metaclass, originalSelector), class_getInstanceMethod(metaclass, aliasSelector));
+    }
+  }
+}
+
++ (void)drt_initialize {
+  [self drt_initialize]; // this is actually the unswizzle original method.
   if ([PFObject class] != [self class])
   {
-    // We are in a subclass of PFObject.
+    // We are in a subclass of PFObject. Since the property list doesn't give
+    // the superclasses properties, we are free here to override overriden
+    // properties freely.
     unsigned int propertiesCount = 0;
     objc_property_t *properties = NULL;
     properties = class_copyPropertyList([self class], &propertiesCount);
