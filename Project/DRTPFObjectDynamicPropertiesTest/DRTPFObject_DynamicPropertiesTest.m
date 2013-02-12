@@ -18,6 +18,12 @@
 @property (atomic, copy) NSString *atomicCopiedString;
 @property (nonatomic, copy) NSArray *nonatomicCopiedArray;
 
+@property (nonatomic, strong, setter = setSetter:) NSNumber *onlySetterNumber;
+@property (nonatomic, strong, getter = isGetter) NSNumber *onlyGetterNumber;
+@property (nonatomic, strong, getter = isGetterBoth, setter = setSetterBoth:) NSNumber *bothGetterAndSetterNumber;
+
+@property (nonatomic, strong, readonly) NSString *readOnlyString;
+
 @property (nonatomic, strong) NSString *transientStrongString;
 @property (nonatomic, assign) NSUInteger transientAssignUInteger;
 
@@ -64,6 +70,20 @@
   GHAssertEquals(expectedDictionary, _myObject.atomicStrongDictionary, nil);
 }
 
+- (void)testAtomicStrongDictionaryStoresNSNullInsteadOfNil
+{
+  _myObject.atomicStrongDictionary = nil;
+
+  GHAssertEquals([NSNull null], [_myObject objectForKey:@"atomicStrongDictionary"], nil);
+}
+
+- (void)testAtomicStrongDictionaryRetrievesNilInsteadOfNSNull
+{
+  [_myObject setObject:[NSNull null] forKey:@"atomicStrongDictionary"];
+
+  GHAssertNil(_myObject.atomicStrongDictionary, nil);
+}
+
 - (void)testNonAtomicStrongNumberIsSameObject
 {
   NSNumber *expectedNumber = @123.456;
@@ -86,6 +106,20 @@
   [_myObject setObject:expectedNumber forKey:@"nonatomicStrongNumber"];
 
   GHAssertEquals(expectedNumber, _myObject.nonatomicStrongNumber, nil);
+}
+
+- (void)testNonAtomicStrongNumberStoresNSNullInsteadOfNil
+{
+  _myObject.nonatomicStrongNumber = nil;
+
+  GHAssertEquals([NSNull null], [_myObject objectForKey:@"nonatomicStrongNumber"], nil);
+}
+
+- (void)testNonAtomicStrongNumberRetrievesNilInsteadOfNSNull
+{
+  [_myObject setObject:[NSNull null] forKey:@"nonatomicStrongNumber"];
+
+  GHAssertNil(_myObject.nonatomicStrongNumber, nil);
 }
 
 - (void)testAtomicCopiedStringIsNotSameObject
@@ -113,6 +147,20 @@
   GHAssertEqualStrings(theString, _myObject.atomicCopiedString, nil);
 }
 
+- (void)testAtomicCopiedStringStoresNSNullInsteadOfNil
+{
+  _myObject.atomicCopiedString = nil;
+
+  GHAssertEquals([NSNull null], [_myObject objectForKey:@"atomicCopiedString"], nil);
+}
+
+- (void)testAtomicCopiedStringRetrievesNilInsteadOfNSNull
+{
+  [_myObject setObject:[NSNull null] forKey:@"atomicCopiedString"];
+
+  GHAssertNil(_myObject.atomicCopiedString, nil);
+}
+
 - (void)testNonAtomicCopiedArrayIsNotSameObject
 {
   NSMutableArray *theArray = [NSMutableArray arrayWithArray:@[@"elem1", @"elem2"]];
@@ -136,6 +184,81 @@
   [_myObject setObject:theArray forKey:@"nonatomicCopiedArray"];
 
   GHAssertEqualObjects(theArray, _myObject.nonatomicCopiedArray, nil);
+}
+
+- (void)testNonAtomicCopiedArrayStoresNSNullInsteadOfNil
+{
+  _myObject.nonatomicCopiedArray = nil;
+
+  GHAssertEquals([NSNull null], [_myObject objectForKey:@"nonatomicCopiedArray"], nil);
+}
+
+- (void)testNonAtomicCopiedArrayRetrievesNilInsteadOfNSNull
+{
+  [_myObject setObject:[NSNull null] forKey:@"nonatomicCopiedArray"];
+
+  GHAssertNil(_myObject.nonatomicCopiedArray, nil);
+}
+
+- (void)testOnlySetterNumberShouldBeSetFromCustomSetter
+{
+  NSNumber *number = @123;
+  [_myObject setSetter:number];
+
+  GHAssertEqualObjects(number, [_myObject objectForKey:@"onlySetterNumber"], nil);
+}
+
+- (void)testOnlySetterNumberShouldProvideStandardGetter
+{
+  NSNumber *number = @123;
+  [_myObject setSetter:number];
+
+  GHAssertEqualObjects(number, [_myObject objectForKey:@"onlySetterNumber"], nil);
+}
+
+- (void)testOnlyGetterNumberShouldBeAccessFromCustomSetter
+{
+  NSNumber *number = @123;
+  [_myObject setObject:number forKey:@"onlyGetterNumber"];
+
+  GHAssertEqualObjects(number, _myObject.isGetter, nil);
+}
+
+- (void)testOnlyGetterNumberShouldProvideStandardSetter
+{
+  NSNumber *number = @123;
+  _myObject.onlyGetterNumber = number;
+
+  GHAssertEqualObjects(number, [_myObject objectForKey:@"onlyGetterNumber"], nil);
+}
+
+- (void)testBothGetterAndSetterNumberShouldBeAccessFromCustomSetter
+{
+  NSNumber *number = @123;
+  [_myObject setObject:number forKey:@"bothGetterAndSetterNumber"];
+
+  GHAssertEqualObjects(number, _myObject.isGetterBoth, nil);
+}
+
+- (void)testBothGetterAndSetterNumberShouldBeSetFromCustomSetter
+{
+  NSNumber *number = @123;
+  [_myObject setSetterBoth:number];
+
+  GHAssertEqualObjects(number, [_myObject objectForKey:@"bothGetterAndSetterNumber"], nil);
+}
+
+- (void)testReadOnlyStringAllowsUsingItsGetter
+{
+  NSString *theString = @"the string";
+  [_myObject setObject:theString forKey:@"readOnlyString"];
+
+  GHAssertEqualStrings(theString, _myObject.readOnlyString, nil);
+}
+
+- (void)testReadOnlyStringDisallowsUsingItsSetter
+{
+  GHAssertFalse([_myObject respondsToSelector:@selector(setReadOnlyString:)], nil);
 }
 
 - (void)testTransientStrongStringDoesNotStoreItsValueIntoPFObject
@@ -180,6 +303,10 @@
 @dynamic nonatomicStrongNumber;
 @dynamic atomicCopiedString;
 @dynamic nonatomicCopiedArray;
+@dynamic onlyGetterNumber;
+@dynamic onlySetterNumber;
+@dynamic bothGetterAndSetterNumber;
+@dynamic readOnlyString;
 
 - (id)init
 {

@@ -10,21 +10,10 @@
 
 #import <objc/runtime.h>
 
-static NSString *DRTKeyFromGetterSelector(SEL selector)
-{
-  return NSStringFromSelector(selector);
-}
+#define DRTNil2Null(x) ((x) ?: [NSNull null])
+#define DRTNull2Nil(x) ({ __typeof__(x) __x = (x); (NSNull *)__x == [NSNull null] ? nil : __x; })
 
-static NSString *DRTKeyFromSetterSelector(SEL selector)
-{
-  const char *selectorName = sel_getName(selector);
-  char *duplicate = strdup(selectorName);
-  duplicate[3] = tolower(duplicate[3]);
-  duplicate[strlen(duplicate) - 1] = '\0'; // Remove the last colon char
-  NSString *key = [[NSString alloc] initWithCString:duplicate+3 encoding:NSASCIIStringEncoding];
-  free(duplicate);
-  return key;
-}
+static const char *DRTSelectorAssociationsKey = "DRTSelectorAssociationsKey";
 
 static SEL DRTGetterSelectorFromPropertyName(const char *name)
 {
@@ -52,8 +41,9 @@ static id DRTAtomicStrongGetter(id self, SEL selector)
 {
   @synchronized(self)
   {
-    NSString *key = DRTKeyFromGetterSelector(selector);
-    return [self objectForKey:key];
+    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
+    NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
+    return DRTNull2Nil([self objectForKey:key]);
   }
 }
 
@@ -61,29 +51,33 @@ static id DRTAtomicCopiedGetter(id self, SEL selector)
 {
   @synchronized(self)
   {
-    NSString *key = DRTKeyFromGetterSelector(selector);
-    return [[self objectForKey:key] copy];
+    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
+    NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
+    return [DRTNull2Nil([self objectForKey:key]) copy];
   }
 }
 
 static id DRTNonAtomicStrongGetter(id self, SEL selector)
 {
-  NSString *key = NSStringFromSelector(selector);
-  return [self objectForKey:key];
+  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
+  NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
+  return DRTNull2Nil([self objectForKey:key]);
 }
 
 static id DRTNonAtomicCopiedGetter(id self, SEL selector)
 {
-  NSString *key = NSStringFromSelector(selector);
-  return [[self objectForKey:key] copy];
+  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
+  NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
+  return [DRTNull2Nil([self objectForKey:key]) copy];
 }
 
 static void DRTAtomicStrongSetter(id self, SEL selector, id value)
 {
   @synchronized(self)
   {
-    NSString *key = DRTKeyFromSetterSelector(selector);
-    [self setObject:value forKey:key];
+    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
+    NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
+    [self setObject:DRTNil2Null(value) forKey:key];
   }
 }
 
@@ -91,21 +85,24 @@ static void DRTAtomicCopiedSetter(id self, SEL selector, id value)
 {
   @synchronized(self)
   {
-    NSString *key = DRTKeyFromSetterSelector(selector);
-    [self setObject:[value copy] forKey:key];
+    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
+    NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
+    [self setObject:DRTNil2Null([value copy]) forKey:key];
   }
 }
 
 static void DRTNonAtomicStrongSetter(id self, SEL selector, id value)
 {
-  NSString *key = DRTKeyFromSetterSelector(selector);
-  [self setObject:value forKey:key];
+  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
+  NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
+  [self setObject:DRTNil2Null(value) forKey:key];
 }
 
 static void DRTNonAtomicCopiedSetter(id self, SEL selector, id value)
 {
-  NSString *key = DRTKeyFromSetterSelector(selector);
-  [self setObject:[value copy] forKey:key];
+  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
+  NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
+  [self setObject:DRTNil2Null([value copy]) forKey:key];
 }
 
 static IMP DRTGetterIMPFromPropertyAttributes(BOOL isStrong, BOOL isCopy, BOOL isNonAtomic)
@@ -150,12 +147,14 @@ static IMP DRTSetterIMPFromPropertyAttributes(BOOL isStrong, BOOL isCopy, BOOL i
 
 + (void)load
 {
-  @autoreleasepool {
+  @autoreleasepool
+  {
     SEL originalSelector = @selector(initialize);
     SEL aliasSelector = @selector(drt_initialize);
     Class metaclass = object_getClass(self);
     Method originalMethod = class_getInstanceMethod(metaclass, originalSelector);
-    if (originalMethod) {
+    if (originalMethod)
+    {
       Method aliasMethod = class_getInstanceMethod(metaclass, aliasSelector);
       class_addMethod(metaclass, originalSelector, class_getMethodImplementation(metaclass, originalSelector), method_getTypeEncoding(originalMethod));
       class_addMethod(metaclass, aliasSelector, class_getMethodImplementation(metaclass, aliasSelector), method_getTypeEncoding(aliasMethod));
@@ -171,53 +170,116 @@ static IMP DRTSetterIMPFromPropertyAttributes(BOOL isStrong, BOOL isCopy, BOOL i
     // We are in a subclass of PFObject. Since the property list doesn't give
     // the superclasses properties, we are free here to override overriden
     // properties freely.
-    unsigned int propertiesCount = 0;
-    objc_property_t *properties = NULL;
-    properties = class_copyPropertyList([self class], &propertiesCount);
-
-    for (unsigned int idx = 0; idx < propertiesCount; idx++) {
-      objc_property_t property = properties[idx];
-      const char *propertyName = property_getName(property);
-
-      unsigned int propertyAttributesCount = 0;
-      objc_property_attribute_t *propertyAttributes = nil;
-      propertyAttributes = property_copyAttributeList(property, &propertyAttributesCount);
-
-      BOOL isDynamic = NO;
-      BOOL isStrong = NO;
-      BOOL isCopy = NO;
-      BOOL isNonAtomic = NO;
-      for (unsigned int jdx = 0; jdx < propertyAttributesCount; jdx++) {
-        objc_property_attribute_t attribute = propertyAttributes[jdx];
-        if (attribute.name[0] == 'D') isDynamic = YES;
-        if (attribute.name[0] == '&') isStrong = YES;
-        if (attribute.name[0] == 'C') isCopy = YES;
-        if (attribute.name[0] == 'N') isNonAtomic = YES;
-        // FIXME: deal with setter and getter attributes.
-      }
-
-      free(propertyAttributes);
-
-      if (isDynamic && (isStrong || isCopy)) {
-        SEL getterSelector = DRTGetterSelectorFromPropertyName(propertyName);
-        SEL setterSelector = DRTSetterSelectorFromPropertyName(propertyName);
-        IMP getterIMP = DRTGetterIMPFromPropertyAttributes(isStrong, isCopy, isNonAtomic);
-        IMP setterIMP = DRTSetterIMPFromPropertyAttributes(isStrong, isCopy, isNonAtomic);
-
-        // FIXME: deal with readonly properties? PFObjects readonly properties
-        // doesn't make sense.
-        class_addMethod([self class], setterSelector, setterIMP, "v@:@");
-        class_addMethod([self class], getterSelector, getterIMP, "@@:");
-      }
-    }
-
-    free(properties);
+    [self drt_initializeSelectorAssociations];
+    [self drt_initializeDynamicProperties];
   }
 }
 
 - (id)initWithAutoClassName
 {
   return [self initWithClassName:NSStringFromClass([self class])];
+}
+
+#pragma mark - Private methods
+
++ (void)drt_initializeDynamicProperties
+{
+  unsigned int propertiesCount = 0;
+  objc_property_t *properties = NULL;
+  properties = class_copyPropertyList([self class], &propertiesCount);
+
+  for (unsigned int idx = 0; idx < propertiesCount; idx++)
+  {
+    objc_property_t property = properties[idx];
+    [self drt_initializeDynamicProperty:property];
+  }
+
+  free(properties);
+}
+
++ (void)drt_initializeDynamicProperty:(objc_property_t)property
+{
+  const char *propertyName = property_getName(property);
+
+  unsigned int propertyAttributesCount = 0;
+  objc_property_attribute_t *propertyAttributes = nil;
+  propertyAttributes = property_copyAttributeList(property, &propertyAttributesCount);
+
+  BOOL isDynamic = NO;
+  BOOL isStrong = NO;
+  BOOL isCopy = NO;
+  BOOL isWeak = NO;
+  BOOL isNonAtomic = NO;
+  BOOL isReadOnly = NO;
+  const char *getterName = NULL;
+  const char *setterName = NULL;
+  const char *typeEncoding = NULL;
+  for (unsigned int jdx = 0; jdx < propertyAttributesCount; jdx++)
+  {
+    objc_property_attribute_t attribute = propertyAttributes[jdx];
+    switch (attribute.name[0])
+    {
+      case 'D': isDynamic = YES; break;
+      case '&': isStrong = YES; break;
+      case 'C': isCopy = YES; break;
+      case 'W': isWeak = YES; break;
+      case 'N': isNonAtomic = YES; break;
+      case 'R': isReadOnly = YES; break;
+      case 'G': getterName = attribute.value; break;
+      case 'S': setterName = attribute.value; break;
+      case 'T': typeEncoding = attribute.value; break;
+    }
+  }
+
+  free(propertyAttributes);
+
+  // readonly properties do not have strong or copy attributes, even if defined
+  if (isDynamic && (isStrong || isCopy || (isReadOnly && typeEncoding[0] == @encode(id)[0])))
+  {
+    SEL getterSelector = NULL;
+    if (getterName != NULL)
+    {
+      getterSelector = sel_registerName(getterName);
+    }
+    else
+    {
+      getterSelector = DRTGetterSelectorFromPropertyName(propertyName);
+    }
+
+    IMP getterIMP = DRTGetterIMPFromPropertyAttributes(isStrong, isCopy, isNonAtomic);
+
+    [self drt_associateSelector:getterSelector withPropertyName:propertyName];
+    class_addMethod([self class], getterSelector, getterIMP, @encode(id (*)(id, SEL)));
+
+    if (!isReadOnly)
+    {
+      SEL setterSelector = NULL;
+      if (setterName)
+      {
+        setterSelector = sel_registerName(setterName);
+      }
+      else
+      {
+        setterSelector = DRTSetterSelectorFromPropertyName(propertyName);
+      }
+
+      IMP setterIMP = DRTSetterIMPFromPropertyAttributes(isStrong, isCopy, isNonAtomic);
+      [self drt_associateSelector:setterSelector withPropertyName:propertyName];
+      class_addMethod([self class], setterSelector, setterIMP, @encode(void (*)(id, SEL, id)));
+    }
+  }
+}
+
++ (void)drt_associateSelector:(SEL)selector withPropertyName:(const char *)propertyName
+{
+  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject(self, &DRTSelectorAssociationsKey);
+  [selectorAssociations setObject:[[NSString alloc] initWithBytes:propertyName length:strlen(propertyName) encoding:NSASCIIStringEncoding]
+                           forKey:NSStringFromSelector(selector)];
+}
+
++ (void)drt_initializeSelectorAssociations
+{
+  objc_setAssociatedObject(self, &DRTSelectorAssociationsKey, [NSMutableDictionary dictionary], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

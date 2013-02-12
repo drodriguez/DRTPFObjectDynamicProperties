@@ -28,7 +28,7 @@ This project aims to provide several facilities to make your live easier:
 
 ### Using
 
-Create your subclass of `PFObject` and declare its properties as you will normally do.
+Create your subclass of `PFObject` and declare its properties as you will normally do. Custom setters and getters are respected. Also `readonly` properties.
 
 ``` objective-c
 #import <Parse/Parse.h>
@@ -36,7 +36,8 @@ Create your subclass of `PFObject` and declare its properties as you will normal
 @interface MYDocument : PFObject
 
 @property (nonatomic, copy) NSString *title;
-@property (nonatomic, strong) NSNumber *countOfPages;
+@property (nonatomic, strong, readonly) NSNumber *countOfPages;
+@property (nonatomic, strong, getter = isLandscape) NSNumber *landscape;
 
 @end
 
@@ -52,6 +53,7 @@ In your implementation simply declare those properties as `@dynamic` and import 
 
 @dynamic title;
 @dynamic countOfPages;
+@dynamic landscape;
 
 - (id)init
 {
@@ -66,10 +68,25 @@ And finally use your object as you will normally do. You can mix `PFObject` and 
 ``` objective-c
 MYDocument *document = [MYDocument init];
 document.title = @"My awesome document";
-document.countOfPages = @42;
+[document setObject:@42 forKey:@"countOfPages"];
+document.landscape = @YES;
 [document save];
 
-NSLog("The document is titled %@ and has %@ pages", document.title, document.countOfPages);
+NSLog("The document is titled %@, has %@ pages and landscape is %@", document.title, document.countOfPages, document.isLandscape);
+```
+
+You can also assign `nil` freely to those dynamic properties. It will get converted into `NSNull` and back for you without doing something else.
+
+``` objective-c
+MYDocument *document = [MYDocument init];
+document.title = nil; // Stores NSNull into "title" key.
+[document save];
+
+NSLog("The document is titled %@", document.title);
+// -> The document is titled (null)
+
+NSLog("The document is really titled %@", [document objectForKey:@"title"]);
+// -> The document is really titled <null>
 ```
 
 ## Requirements
@@ -82,8 +99,6 @@ To set a compiler flag in Xcode, go to your desidered target and select the “B
 
 ## TODO
 
-- Generate the getter and the setter names according to the property attributes (the name mangling will become much more complicated).
-- Don’t generate the setter if the property is read only (but who wants a PFObject property which is read only?).
 - Deal with subclasses of the consumer properly.
 - Maybe try to make autoboxing/unboxing easier for the consumer.
 - Avoid crashing with methods that are already there.
