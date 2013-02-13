@@ -15,24 +15,32 @@
 
 static const char *DRTSelectorAssociationsKey = "DRTSelectorAssociationsKey";
 
-static SEL DRTGetterSelectorFromPropertyName(const char *name)
+static SEL DRTGetterSelectorFromPropertyName(const char *name, const char *getterName)
 {
-  return sel_registerName(name);
+  return sel_registerName(getterName ?: name);
 }
 
-static SEL DRTSetterSelectorFromPropertyName(const char *name)
+static SEL DRTSetterSelectorFromPropertyName(const char *name, const char *setterName)
 {
-  //                    "set" + name + ":" + '\0'
-  size_t selectorSize = 3 + strlen(name) + 1 + 1;
-  char *selectorName = malloc(selectorSize);
-  strlcpy(selectorName, "set", selectorSize);
-  strlcat(selectorName, name, selectorSize);
-  strlcat(selectorName, ":", selectorSize);
-  selectorName[3] = toupper(selectorName[3]);
-  SEL selector = sel_registerName(selectorName);
-  free(selectorName);
+  SEL setterSelector = NULL;
+  if (setterName)
+  {
+    setterSelector = sel_registerName(setterName);
+  }
+  else
+  {
+    //                    "set" + name + ":" + '\0'
+    size_t selectorSize = 3 + strlen(name) + 1 + 1;
+    char *selectorName = malloc(selectorSize);
+    strlcpy(selectorName, "set", selectorSize);
+    strlcat(selectorName, name, selectorSize);
+    strlcat(selectorName, ":", selectorSize);
+    selectorName[3] = toupper(selectorName[3]);
+    setterSelector = sel_registerName(selectorName);
+    free(selectorName);
+  }
 
-  return selector;
+  return setterSelector;
 }
 
 @implementation PFObject (DRTDynamicProperties)
@@ -105,6 +113,102 @@ static void DRTNonAtomicCopiedSetter(id self, SEL selector, id value)
   [self setObject:DRTNil2Null([value copy]) forKey:key];
 }
 
+#define DRTAtomicAssignGetterName(selectorPart) DRTAtomicAssignGetter ## selectorPart
+#define DRTNonAtomicAssignGetterName(selectorPart) DRTNonAtomicAssignGetter ## selectorPart
+
+#define DRTAtomicAssignSetterName(selectorPart) DRTAtomicAssignSetter ## selectorPart
+#define DRTNonAtomicAssignSetterName(selectorPart) DRTNonAtomicAssignSetter ## selectorPart
+
+#define DRTAtomicAssignGetter(type, selectorPart) \
+static type DRTAtomicAssignGetterName(selectorPart)(id self, SEL selector) \
+{ \
+  @synchronized(self) \
+  { \
+    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey); \
+    NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)]; \
+    return [[self objectForKey:key] selectorPart ## Value]; \
+  } \
+}
+
+#define DRTNonAtomicAssignGetter(type, selectorPart) \
+static type DRTNonAtomicAssignGetterName(selectorPart)(id self, SEL selector) \
+{ \
+  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey); \
+  NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)]; \
+  return [[self objectForKey:key] selectorPart ## Value]; \
+}
+
+#define DRTAtomicAssignSetter(type, selectorPart) \
+static void DRTAtomicAssignSetterName(selectorPart)(id self, SEL selector, type value) \
+{ \
+  @synchronized(self) \
+  { \
+    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey); \
+    NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)]; \
+    [self setObject:[NSNumber numberWith ## selectorPart:value] forKey:key]; \
+  } \
+}
+
+#define DRTNonAtomicAssignSetter(type, selectorPart) \
+static void DRTNonAtomicAssignSetterName(selectorPart)(id self, SEL selector, type value) \
+{ \
+  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey); \
+  NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)]; \
+  [self setObject:[NSNumber numberWith ## selectorPart:value] forKey:key]; \
+}
+
+DRTAtomicAssignGetter(char, char);
+DRTAtomicAssignGetter(unsigned char, unsignedChar);
+DRTAtomicAssignGetter(short, short);
+DRTAtomicAssignGetter(unsigned short, unsignedShort);
+DRTAtomicAssignGetter(int, int);
+DRTAtomicAssignGetter(unsigned int, unsignedInt);
+DRTAtomicAssignGetter(long, long);
+DRTAtomicAssignGetter(unsigned long, unsignedLong);
+DRTAtomicAssignGetter(long long, longLong);
+DRTAtomicAssignGetter(unsigned long long, unsignedLongLong);
+DRTAtomicAssignGetter(float, float);
+DRTAtomicAssignGetter(double, double);
+
+DRTNonAtomicAssignGetter(char, char);
+DRTNonAtomicAssignGetter(unsigned char, unsignedChar);
+DRTNonAtomicAssignGetter(short, short);
+DRTNonAtomicAssignGetter(unsigned short, unsignedShort);
+DRTNonAtomicAssignGetter(int, int);
+DRTNonAtomicAssignGetter(unsigned int, unsignedInt);
+DRTNonAtomicAssignGetter(long, long);
+DRTNonAtomicAssignGetter(unsigned long, unsignedLong);
+DRTNonAtomicAssignGetter(long long, longLong);
+DRTNonAtomicAssignGetter(unsigned long long, unsignedLongLong);
+DRTNonAtomicAssignGetter(float, float);
+DRTNonAtomicAssignGetter(double, double);
+
+DRTAtomicAssignSetter(char, Char);
+DRTAtomicAssignSetter(unsigned char, UnsignedChar);
+DRTAtomicAssignSetter(short, Short);
+DRTAtomicAssignSetter(unsigned short, UnsignedShort);
+DRTAtomicAssignSetter(int, Int);
+DRTAtomicAssignSetter(unsigned int, UnsignedInt);
+DRTAtomicAssignSetter(long, Long);
+DRTAtomicAssignSetter(unsigned long, UnsignedLong);
+DRTAtomicAssignSetter(long long, LongLong);
+DRTAtomicAssignSetter(unsigned long long, UnsignedLongLong);
+DRTAtomicAssignSetter(float, Float);
+DRTAtomicAssignSetter(double, Double);
+
+DRTNonAtomicAssignSetter(char, Char);
+DRTNonAtomicAssignSetter(unsigned char, UnsignedChar);
+DRTNonAtomicAssignSetter(short, Short);
+DRTNonAtomicAssignSetter(unsigned short, UnsignedShort);
+DRTNonAtomicAssignSetter(int, Int);
+DRTNonAtomicAssignSetter(unsigned int, UnsignedInt);
+DRTNonAtomicAssignSetter(long, Long);
+DRTNonAtomicAssignSetter(unsigned long, UnsignedLong);
+DRTNonAtomicAssignSetter(long long, LongLong);
+DRTNonAtomicAssignSetter(unsigned long long, UnsignedLongLong);
+DRTNonAtomicAssignSetter(float, Float);
+DRTNonAtomicAssignSetter(double, Double);
+
 static IMP DRTGetterIMPFromPropertyAttributes(BOOL isStrong, BOOL isCopy, BOOL isNonAtomic)
 {
   if (isStrong && isNonAtomic)
@@ -123,6 +227,40 @@ static IMP DRTGetterIMPFromPropertyAttributes(BOOL isStrong, BOOL isCopy, BOOL i
   {
     return (IMP)DRTAtomicCopiedGetter;
   }
+}
+
+static IMP DRTGetterIMPFromEncoding(const char *encoding, BOOL isNonAtomic)
+{
+  if      (encoding[0] == @encode(char)[0])               return isNonAtomic ? (IMP)DRTNonAtomicAssignGetterName(char)             : (IMP)DRTAtomicAssignGetterName(char);
+  else if (encoding[0] == @encode(unsigned char)[0])      return isNonAtomic ? (IMP)DRTNonAtomicAssignGetterName(unsignedChar)     : (IMP)DRTAtomicAssignGetterName(unsignedChar) ;
+  else if (encoding[0] == @encode(short)[0])              return isNonAtomic ? (IMP)DRTNonAtomicAssignGetterName(short)            : (IMP)DRTAtomicAssignGetterName(short);
+  else if (encoding[0] == @encode(unsigned short)[0])     return isNonAtomic ? (IMP)DRTNonAtomicAssignGetterName(unsignedShort)    : (IMP)DRTAtomicAssignGetterName(unsignedShort);
+  else if (encoding[0] == @encode(int)[0])                return isNonAtomic ? (IMP)DRTNonAtomicAssignGetterName(int)              : (IMP)DRTAtomicAssignGetterName(int);
+  else if (encoding[0] == @encode(unsigned int)[0])       return isNonAtomic ? (IMP)DRTNonAtomicAssignGetterName(unsignedInt)      : (IMP)DRTAtomicAssignGetterName(unsignedInt);
+  else if (encoding[0] == @encode(long)[0])               return isNonAtomic ? (IMP)DRTNonAtomicAssignGetterName(long)             : (IMP)DRTAtomicAssignGetterName(long);
+  else if (encoding[0] == @encode(unsigned long)[0])      return isNonAtomic ? (IMP)DRTNonAtomicAssignGetterName(unsignedLong)     : (IMP)DRTAtomicAssignGetterName(unsignedLong);
+  else if (encoding[0] == @encode(long long)[0])          return isNonAtomic ? (IMP)DRTNonAtomicAssignGetterName(longLong)         : (IMP)DRTAtomicAssignGetterName(longLong);
+  else if (encoding[0] == @encode(unsigned long long)[0]) return isNonAtomic ? (IMP)DRTNonAtomicAssignGetterName(unsignedLongLong) : (IMP)DRTAtomicAssignGetterName(unsignedLongLong);
+  else if (encoding[0] == @encode(float)[0])              return isNonAtomic ? (IMP)DRTNonAtomicAssignGetterName(float)            : (IMP)DRTAtomicAssignGetterName(float);
+  else if (encoding[0] == @encode(double)[0])             return isNonAtomic ? (IMP)DRTNonAtomicAssignGetterName(double)           : (IMP)DRTAtomicAssignGetterName(double);
+  else NSCAssert(NO, @"invalid encoding %s", encoding); return NULL;
+}
+
+static IMP DRTSetterIMPFromEncoding(const char *encoding, BOOL isNonAtomic)
+{
+  if      (encoding[0] == @encode(char)[0])               return isNonAtomic ? (IMP)DRTNonAtomicAssignSetterName(Char)             : (IMP)DRTAtomicAssignSetterName(Char);
+  else if (encoding[0] == @encode(unsigned char)[0])      return isNonAtomic ? (IMP)DRTNonAtomicAssignSetterName(UnsignedChar)     : (IMP)DRTAtomicAssignSetterName(UnsignedChar) ;
+  else if (encoding[0] == @encode(short)[0])              return isNonAtomic ? (IMP)DRTNonAtomicAssignSetterName(Short)            : (IMP)DRTAtomicAssignSetterName(Short);
+  else if (encoding[0] == @encode(unsigned short)[0])     return isNonAtomic ? (IMP)DRTNonAtomicAssignSetterName(UnsignedShort)    : (IMP)DRTAtomicAssignSetterName(UnsignedShort);
+  else if (encoding[0] == @encode(int)[0])                return isNonAtomic ? (IMP)DRTNonAtomicAssignSetterName(Int)              : (IMP)DRTAtomicAssignSetterName(Int);
+  else if (encoding[0] == @encode(unsigned int)[0])       return isNonAtomic ? (IMP)DRTNonAtomicAssignSetterName(UnsignedInt)      : (IMP)DRTAtomicAssignSetterName(UnsignedInt);
+  else if (encoding[0] == @encode(long)[0])               return isNonAtomic ? (IMP)DRTNonAtomicAssignSetterName(Long)             : (IMP)DRTAtomicAssignSetterName(Long);
+  else if (encoding[0] == @encode(unsigned long)[0])      return isNonAtomic ? (IMP)DRTNonAtomicAssignSetterName(UnsignedLong)     : (IMP)DRTAtomicAssignSetterName(UnsignedLong);
+  else if (encoding[0] == @encode(long long)[0])          return isNonAtomic ? (IMP)DRTNonAtomicAssignSetterName(LongLong)         : (IMP)DRTAtomicAssignSetterName(LongLong);
+  else if (encoding[0] == @encode(unsigned long long)[0]) return isNonAtomic ? (IMP)DRTNonAtomicAssignSetterName(UnsignedLongLong) : (IMP)DRTAtomicAssignSetterName(UnsignedLongLong);
+  else if (encoding[0] == @encode(float)[0])              return isNonAtomic ? (IMP)DRTNonAtomicAssignSetterName(Float)            : (IMP)DRTAtomicAssignSetterName(Float);
+  else if (encoding[0] == @encode(double)[0])             return isNonAtomic ? (IMP)DRTNonAtomicAssignSetterName(Double)           : (IMP)DRTAtomicAssignSetterName(Double);
+  else NSCAssert(NO, @"invalid encoding %s", encoding); return NULL;
 }
 
 static IMP DRTSetterIMPFromPropertyAttributes(BOOL isStrong, BOOL isCopy, BOOL isNonAtomic)
@@ -231,43 +369,59 @@ static IMP DRTSetterIMPFromPropertyAttributes(BOOL isStrong, BOOL isCopy, BOOL i
     }
   }
 
-  free(propertyAttributes);
-
-  // readonly properties do not have strong or copy attributes, even if defined
-  if (isDynamic && (isStrong || isCopy || (isReadOnly && typeEncoding[0] == @encode(id)[0])))
+  if (isDynamic && !isWeak)
   {
-    SEL getterSelector = NULL;
-    if (getterName != NULL)
-    {
-      getterSelector = sel_registerName(getterName);
-    }
-    else
-    {
-      getterSelector = DRTGetterSelectorFromPropertyName(propertyName);
-    }
-
-    IMP getterIMP = DRTGetterIMPFromPropertyAttributes(isStrong, isCopy, isNonAtomic);
-
-    [self drt_associateSelector:getterSelector withPropertyName:propertyName];
-    class_addMethod([self class], getterSelector, getterIMP, @encode(id (*)(id, SEL)));
+    SEL getterSelector = DRTGetterSelectorFromPropertyName(propertyName, getterName);
+    [self drt_addGetter:getterSelector propertyName:propertyName isStrong:isStrong isCopy:isCopy isNonAtomic:isNonAtomic encoding:typeEncoding];
 
     if (!isReadOnly)
     {
-      SEL setterSelector = NULL;
-      if (setterName)
-      {
-        setterSelector = sel_registerName(setterName);
-      }
-      else
-      {
-        setterSelector = DRTSetterSelectorFromPropertyName(propertyName);
-      }
-
-      IMP setterIMP = DRTSetterIMPFromPropertyAttributes(isStrong, isCopy, isNonAtomic);
-      [self drt_associateSelector:setterSelector withPropertyName:propertyName];
-      class_addMethod([self class], setterSelector, setterIMP, @encode(void (*)(id, SEL, id)));
+      SEL setterSelector = DRTSetterSelectorFromPropertyName(propertyName, setterName);
+      [self drt_addSetter:setterSelector propertyName:propertyName isStrong:isStrong isCopy:isCopy isNonAtomic:isNonAtomic encoding:typeEncoding];
     }
   }
+
+  free(propertyAttributes);
+}
+
++ (void)drt_addGetter:(SEL)selector propertyName:(const char *)propertyName isStrong:(BOOL)isStrong isCopy:(BOOL)isCopy isNonAtomic:(BOOL)isNonAtomic encoding:(const char *)encoding
+{
+  // NSObject readonly properties do not specify strong or copy as attribute
+  if (!isStrong && !isCopy && encoding[0] == @encode(id)[0])
+  {
+    isStrong = YES;
+  }
+
+  IMP getterIMP = NULL;
+  if (isStrong || isCopy)
+  {
+    getterIMP = DRTGetterIMPFromPropertyAttributes(isStrong, isCopy, isNonAtomic);
+  }
+  else
+  {
+    getterIMP = DRTGetterIMPFromEncoding(encoding, isNonAtomic);
+  }
+
+  [self drt_associateSelector:selector withPropertyName:propertyName];
+  NSString *getterEncoding = [NSString stringWithFormat:@"%s%s%s", encoding, @encode(id), @encode(SEL)];
+  class_addMethod([self class], selector, getterIMP, [getterEncoding UTF8String]);
+}
+
++ (void)drt_addSetter:(SEL)selector propertyName:(const char *)propertyName isStrong:(BOOL)isStrong isCopy:(BOOL)isCopy isNonAtomic:(BOOL)isNonAtomic encoding:(const char *)encoding
+{
+  IMP setterIMP = NULL;
+  if (isStrong || isCopy)
+  {
+    setterIMP = DRTSetterIMPFromPropertyAttributes(isStrong, isCopy, isNonAtomic);
+  }
+  else
+  {
+    setterIMP = DRTSetterIMPFromEncoding(encoding, isNonAtomic);
+  }
+
+  [self drt_associateSelector:selector withPropertyName:propertyName];
+  NSString *setterEncoding = [NSString stringWithFormat:@"%s%s%s%s", @encode(void), @encode(id), @encode(SEL), encoding];
+  class_addMethod([self class], selector, setterIMP, [setterEncoding UTF8String]);
 }
 
 + (void)drt_associateSelector:(SEL)selector withPropertyName:(const char *)propertyName
