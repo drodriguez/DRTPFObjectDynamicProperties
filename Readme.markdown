@@ -1,6 +1,6 @@
 # DRTPFObjectDynamicProperties
 
-[Parse](https://parse.com) framework provides `PFObject` as the base class for their BaSS solution. Unfortunately they don’t provide ready to use solution for subclassing their object, declaring some `@dynamic` properties and using the setters and getters instead of their *pseudo*-NSDictionary interface, as Core Data does under the hood. This leads to code that’s not easily read and in many cases to ugly SOP (String Oriented Programming).
+[Parse](https://parse.com) framework provides `PFObject` as the base class for their BaaS solution. Unfortunately they don’t provide ready to use solution for subclassing their object, declaring some `@dynamic` properties and using the setters and getters instead of their *pseudo*-NSDictionary interface, as Core Data does under the hood. This leads to code that’s not easily read and in many cases to ugly SOP (String Oriented Programming).
 
 This project aims to provide several facilities to make your live easier:
 
@@ -28,7 +28,7 @@ This project aims to provide several facilities to make your live easier:
 
 ### Using
 
-Create your subclass of `PFObject` and declare its properties as you will normally do. Custom setters and getters are respected. Also `readonly` properties.
+Create your subclass of `PFObject` and declare its properties as you will normally do. Custom setters and getters are respected. Also `readonly` properties. Integer and floating point native types are automatically boxed and unboxed for you.
 
 ``` objective-c
 #import <Parse/Parse.h>
@@ -38,6 +38,8 @@ Create your subclass of `PFObject` and declare its properties as you will normal
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, strong, readonly) NSNumber *countOfPages;
 @property (nonatomic, strong, getter = isLandscape) NSNumber *landscape;
+@property (nonatomic, assign) CGFloat width;
+@property (nonatomic, assign) CGFloat height;
 
 @end
 
@@ -54,6 +56,8 @@ In your implementation simply declare those properties as `@dynamic` and import 
 @dynamic title;
 @dynamic countOfPages;
 @dynamic landscape;
+@dynamic width;
+@dynamic height;
 
 - (id)init
 {
@@ -63,16 +67,23 @@ In your implementation simply declare those properties as `@dynamic` and import 
 @end
 ```
 
-And finally use your object as you will normally do. You can mix `PFObject` and properties as you will.
+And finally use your object as you will normally do. You can mix `PFObject` and properties as you will (properties of native types will return the corresponding NSNumber representation).
 
 ``` objective-c
 MYDocument *document = [MYDocument init];
 document.title = @"My awesome document";
 [document setObject:@42 forKey:@"countOfPages"];
 document.landscape = @YES;
+document.width = 123.45f;
+document.height = 678.90f;
 [document save];
 
-NSLog("The document is titled %@, has %@ pages and landscape is %@", document.title, document.countOfPages, document.isLandscape);
+NSLog("The document is titled %@, has %@ pages, landscape is %@, and measures %f x %f",
+      document.title,
+      document.countOfPages,
+      document.isLandscape,
+      document.width,
+      document.height);
 ```
 
 You can also assign `nil` freely to those dynamic properties. It will get converted into `NSNull` and back for you without doing something else.
@@ -99,9 +110,11 @@ To set a compiler flag in Xcode, go to your desidered target and select the “B
 
 ## TODO
 
-- Deal with subclasses of the consumer properly.
-- Maybe try to make autoboxing/unboxing easier for the consumer.
-- Avoid crashing with methods that are already there.
+- Nothing in my mind, do you have any idea?
+
+## Contributing
+
+See CONTRIBUTING.md file for more info.
 
 ## Credits & Contact
 

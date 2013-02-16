@@ -49,9 +49,7 @@ static id DRTAtomicStrongGetter(id self, SEL selector)
 {
   @synchronized(self)
   {
-    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
-    NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
-    return DRTNull2Nil([self objectForKey:key]);
+    return DRTNull2Nil([self objectForKey:[self drt_keyForSelector:selector]]);
   }
 }
 
@@ -59,33 +57,25 @@ static id DRTAtomicCopiedGetter(id self, SEL selector)
 {
   @synchronized(self)
   {
-    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
-    NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
-    return [DRTNull2Nil([self objectForKey:key]) copy];
+    return [DRTNull2Nil([self objectForKey:[self drt_keyForSelector:selector]]) copy];
   }
 }
 
 static id DRTNonAtomicStrongGetter(id self, SEL selector)
 {
-  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
-  NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
-  return DRTNull2Nil([self objectForKey:key]);
+  return DRTNull2Nil([self objectForKey:[self drt_keyForSelector:selector]]);
 }
 
 static id DRTNonAtomicCopiedGetter(id self, SEL selector)
 {
-  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
-  NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
-  return [DRTNull2Nil([self objectForKey:key]) copy];
+  return [DRTNull2Nil([self objectForKey:[self drt_keyForSelector:selector]]) copy];
 }
 
 static void DRTAtomicStrongSetter(id self, SEL selector, id value)
 {
   @synchronized(self)
   {
-    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
-    NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
-    [self setObject:DRTNil2Null(value) forKey:key];
+    [self setObject:DRTNil2Null(value) forKey:[self drt_keyForSelector:selector]];
   }
 }
 
@@ -93,24 +83,18 @@ static void DRTAtomicCopiedSetter(id self, SEL selector, id value)
 {
   @synchronized(self)
   {
-    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
-    NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
-    [self setObject:DRTNil2Null([value copy]) forKey:key];
+    [self setObject:DRTNil2Null([value copy]) forKey:[self drt_keyForSelector:selector]];
   }
 }
 
 static void DRTNonAtomicStrongSetter(id self, SEL selector, id value)
 {
-  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
-  NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
-  [self setObject:DRTNil2Null(value) forKey:key];
+  [self setObject:DRTNil2Null(value) forKey:[self drt_keyForSelector:selector]];
 }
 
 static void DRTNonAtomicCopiedSetter(id self, SEL selector, id value)
 {
-  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey);
-  NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
-  [self setObject:DRTNil2Null([value copy]) forKey:key];
+  [self setObject:DRTNil2Null([value copy]) forKey:[self drt_keyForSelector:selector]];
 }
 
 #define DRTAtomicAssignGetterName(selectorPart) DRTAtomicAssignGetter ## selectorPart
@@ -124,18 +108,14 @@ static type DRTAtomicAssignGetterName(selectorPart)(id self, SEL selector) \
 { \
   @synchronized(self) \
   { \
-    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey); \
-    NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)]; \
-    return [[self objectForKey:key] selectorPart ## Value]; \
+    return [[self objectForKey:[self drt_keyForSelector:selector]] selectorPart ## Value]; \
   } \
 }
 
 #define DRTNonAtomicAssignGetter(type, selectorPart) \
 static type DRTNonAtomicAssignGetterName(selectorPart)(id self, SEL selector) \
 { \
-  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey); \
-  NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)]; \
-  return [[self objectForKey:key] selectorPart ## Value]; \
+  return [[self objectForKey:[self drt_keyForSelector:selector]] selectorPart ## Value]; \
 }
 
 #define DRTAtomicAssignSetter(type, selectorPart) \
@@ -143,18 +123,14 @@ static void DRTAtomicAssignSetterName(selectorPart)(id self, SEL selector, type 
 { \
   @synchronized(self) \
   { \
-    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey); \
-    NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)]; \
-    [self setObject:[NSNumber numberWith ## selectorPart:value] forKey:key]; \
+    [self setObject:[NSNumber numberWith ## selectorPart:value] forKey:[self drt_keyForSelector:selector]]; \
   } \
 }
 
 #define DRTNonAtomicAssignSetter(type, selectorPart) \
 static void DRTNonAtomicAssignSetterName(selectorPart)(id self, SEL selector, type value) \
 { \
-  NSMutableDictionary *selectorAssociations = objc_getAssociatedObject([self class], &DRTSelectorAssociationsKey); \
-  NSString *key = [selectorAssociations objectForKey:NSStringFromSelector(selector)]; \
-  [self setObject:[NSNumber numberWith ## selectorPart:value] forKey:key]; \
+  [self setObject:[NSNumber numberWith ## selectorPart:value] forKey:[self drt_keyForSelector:selector]]; \
 }
 
 DRTAtomicAssignGetter(char, char);
@@ -429,6 +405,32 @@ static IMP DRTSetterIMPFromPropertyAttributes(BOOL isStrong, BOOL isCopy, BOOL i
   NSMutableDictionary *selectorAssociations = objc_getAssociatedObject(self, &DRTSelectorAssociationsKey);
   [selectorAssociations setObject:[[NSString alloc] initWithBytes:propertyName length:strlen(propertyName) encoding:NSASCIIStringEncoding]
                            forKey:NSStringFromSelector(selector)];
+}
+
+- (NSString *)drt_keyForSelector:(SEL)selector
+{
+  Class klass = [self class];
+  NSString *key = nil;
+  do
+  {
+    NSMutableDictionary *selectorAssociations = objc_getAssociatedObject(klass, &DRTSelectorAssociationsKey);
+    key = [selectorAssociations objectForKey:NSStringFromSelector(selector)];
+    klass = [klass superclass];
+  } while (key == nil && klass != [PFObject class]);
+
+  if (key != nil)
+  {
+    return key;
+  }
+  else
+  {
+    [NSException raise:NSInvalidArgumentException
+                format:@"-[%@ %@]: unrecognized selector sent to instance %p",
+                       NSStringFromClass([self class]),
+                       NSStringFromSelector(selector),
+                       self];
+    __builtin_unreachable();
+  }
 }
 
 + (void)drt_initializeSelectorAssociations

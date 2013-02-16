@@ -152,7 +152,7 @@
 			attributes = {
 				CLASSPREFIX = DRT;
 				LastUpgradeCheck = 0460;
-				ORGANIZATIONNAME = "Daniel Rodr√≠guez Troiti√±o";
+				ORGANIZATIONNAME = "Daniel Rodríguez Troitiño";
 			};
 			buildConfigurationList = 658AF60A16C6CFBE0065941A /* Build configuration list for PBXProject "DRTPFObjectDynamicPropertiesTest" */;
 			compatibilityVersion = "Xcode 3.2";

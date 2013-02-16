@@ -45,6 +45,31 @@
 @end
 
 
+@interface DRTMyPFObjectSubclassWithCustomGetter : PFObject
+
+@property (nonatomic, strong) NSString *stringWithDefault;
+
+- (id)init;
+
+@end
+
+
+@interface DRTMyPFObjectParent : PFObject
+
+@property (nonatomic, strong) NSString *stringInParent;
+
+- (id)init;
+
+@end
+
+
+@interface DRTMyPFObjectChild : DRTMyPFObjectParent
+
+@property (nonatomic, strong) NSString *stringInChild;
+
+@end
+
+
 @interface DRTPFObject_DynamicPropertiesTest : GHTestCase
 
 @end
@@ -64,7 +89,7 @@
     NSDictionary *expectedDictionary = @{@"key1": @"value1", @"key2": @"value2"};
     _myObject.atomicStrongDictionary = expectedDictionary;
 
-    GHAssertEquals(expectedDictionary, _myObject.atomicStrongDictionary, nil);
+    GHAssertEquals(_myObject.atomicStrongDictionary, expectedDictionary, nil);
 }
 
 - (void)testAtomicStrongDictionaryStoresItsValueIntoPFObject
@@ -72,7 +97,7 @@
   NSDictionary *expectedDictionary = @{@"key1": @"value1", @"key2": @"value2"};
   _myObject.atomicStrongDictionary = expectedDictionary;
 
-  GHAssertEquals(expectedDictionary, [_myObject objectForKey:@"atomicStrongDictionary"], nil);
+  GHAssertEquals([_myObject objectForKey:@"atomicStrongDictionary"], expectedDictionary, nil);
 }
 
 - (void)testAtomicStrongDictionaryRetrievesItsValueFromPFObject
@@ -80,14 +105,14 @@
   NSDictionary *expectedDictionary = @{@"key1": @"value1", @"key2": @"value2"};
   [_myObject setObject:expectedDictionary forKey:@"atomicStrongDictionary"];
 
-  GHAssertEquals(expectedDictionary, _myObject.atomicStrongDictionary, nil);
+  GHAssertEquals(_myObject.atomicStrongDictionary, expectedDictionary, nil);
 }
 
 - (void)testAtomicStrongDictionaryStoresNSNullInsteadOfNil
 {
   _myObject.atomicStrongDictionary = nil;
 
-  GHAssertEquals([NSNull null], [_myObject objectForKey:@"atomicStrongDictionary"], nil);
+  GHAssertEquals([_myObject objectForKey:@"atomicStrongDictionary"], [NSNull null], nil);
 }
 
 - (void)testAtomicStrongDictionaryRetrievesNilInsteadOfNSNull
@@ -102,7 +127,7 @@
   NSNumber *expectedNumber = @123.456;
   _myObject.nonatomicStrongNumber = expectedNumber;
 
-  GHAssertEquals(expectedNumber, _myObject.nonatomicStrongNumber, nil);
+  GHAssertEquals(_myObject.nonatomicStrongNumber, expectedNumber, nil);
 }
 
 - (void)testNonAtomicStrongNumberStoresItsValueIntoPFObject
@@ -110,7 +135,7 @@
   NSNumber *expectedNumber = @123.456;
   _myObject.nonatomicStrongNumber = expectedNumber;
 
-  GHAssertEquals(expectedNumber, [_myObject objectForKey:@"nonatomicStrongNumber"], nil);
+  GHAssertEquals([_myObject objectForKey:@"nonatomicStrongNumber"], expectedNumber, nil);
 }
 
 - (void)testNonAtomicStrongNumberRetrievesItsValueFromPFObject
@@ -118,14 +143,14 @@
   NSNumber *expectedNumber = @123.456;
   [_myObject setObject:expectedNumber forKey:@"nonatomicStrongNumber"];
 
-  GHAssertEquals(expectedNumber, _myObject.nonatomicStrongNumber, nil);
+  GHAssertEquals(_myObject.nonatomicStrongNumber, expectedNumber, nil);
 }
 
 - (void)testNonAtomicStrongNumberStoresNSNullInsteadOfNil
 {
   _myObject.nonatomicStrongNumber = nil;
 
-  GHAssertEquals([NSNull null], [_myObject objectForKey:@"nonatomicStrongNumber"], nil);
+  GHAssertEquals([_myObject objectForKey:@"nonatomicStrongNumber"], [NSNull null], nil);
 }
 
 - (void)testNonAtomicStrongNumberRetrievesNilInsteadOfNSNull
@@ -140,8 +165,8 @@
   NSMutableString *theString = [NSMutableString stringWithString:@"the string"];
   _myObject.atomicCopiedString = theString;
 
-  GHAssertNotEquals(theString, _myObject.atomicCopiedString, nil);
-  GHAssertEqualStrings(theString, _myObject.atomicCopiedString, nil);
+  GHAssertNotEquals(_myObject.atomicCopiedString, theString, nil);
+  GHAssertEqualStrings(_myObject.atomicCopiedString, theString, nil);
 }
 
 - (void)testAtomicCopiedStringStoresItsValueIntoPFObject
@@ -149,7 +174,7 @@
   NSMutableString *theString = [NSMutableString stringWithString:@"the string"];
   _myObject.atomicCopiedString = theString;
 
-  GHAssertEqualStrings(theString, [_myObject objectForKey:@"atomicCopiedString"], nil);
+  GHAssertEqualStrings([_myObject objectForKey:@"atomicCopiedString"], theString, nil);
 }
 
 - (void)testAtomicCopiedStringRetrievesItsValueFromPFObject
@@ -157,14 +182,14 @@
   NSMutableString *theString = [NSMutableString stringWithString:@"the string"];
   [_myObject setObject:theString forKey:@"atomicCopiedString"];
 
-  GHAssertEqualStrings(theString, _myObject.atomicCopiedString, nil);
+  GHAssertEqualStrings(_myObject.atomicCopiedString, theString, nil);
 }
 
 - (void)testAtomicCopiedStringStoresNSNullInsteadOfNil
 {
   _myObject.atomicCopiedString = nil;
 
-  GHAssertEquals([NSNull null], [_myObject objectForKey:@"atomicCopiedString"], nil);
+  GHAssertEquals([_myObject objectForKey:@"atomicCopiedString"], [NSNull null], nil);
 }
 
 - (void)testAtomicCopiedStringRetrievesNilInsteadOfNSNull
@@ -179,8 +204,8 @@
   NSMutableArray *theArray = [NSMutableArray arrayWithArray:@[@"elem1", @"elem2"]];
   _myObject.nonatomicCopiedArray = theArray;
 
-  GHAssertNotEquals(theArray, _myObject.nonatomicCopiedArray, nil);
-  GHAssertEqualObjects(theArray, _myObject.nonatomicCopiedArray, nil);
+  GHAssertNotEquals(_myObject.nonatomicCopiedArray, theArray, nil);
+  GHAssertEqualObjects(_myObject.nonatomicCopiedArray, theArray, nil);
 }
 
 - (void)testNonAtomicCopiedArrayStoresItsValueIntoPFObject
@@ -188,7 +213,7 @@
   NSMutableArray *theArray = [NSMutableArray arrayWithArray:@[@"elem1", @"elem2"]];
   _myObject.nonatomicCopiedArray = theArray;
 
-  GHAssertEqualObjects(theArray, [_myObject objectForKey:@"nonatomicCopiedArray"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"nonatomicCopiedArray"], theArray, nil);
 }
 
 - (void)testNonAtomicCopiedArrayRetrievesItsValueFromPFObject
@@ -196,14 +221,14 @@
   NSMutableArray *theArray = [NSMutableArray arrayWithArray:@[@"elem1", @"elem2"]];
   [_myObject setObject:theArray forKey:@"nonatomicCopiedArray"];
 
-  GHAssertEqualObjects(theArray, _myObject.nonatomicCopiedArray, nil);
+  GHAssertEqualObjects(_myObject.nonatomicCopiedArray, theArray, nil);
 }
 
 - (void)testNonAtomicCopiedArrayStoresNSNullInsteadOfNil
 {
   _myObject.nonatomicCopiedArray = nil;
 
-  GHAssertEquals([NSNull null], [_myObject objectForKey:@"nonatomicCopiedArray"], nil);
+  GHAssertEquals([_myObject objectForKey:@"nonatomicCopiedArray"], [NSNull null], nil);
 }
 
 - (void)testNonAtomicCopiedArrayRetrievesNilInsteadOfNSNull
@@ -218,7 +243,7 @@
   NSNumber *number = @123;
   [_myObject setSetter:number];
 
-  GHAssertEqualObjects(number, [_myObject objectForKey:@"onlySetterNumber"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"onlySetterNumber"], number, nil);
 }
 
 - (void)testOnlySetterNumberShouldProvideStandardGetter
@@ -226,7 +251,7 @@
   NSNumber *number = @123;
   [_myObject setSetter:number];
 
-  GHAssertEqualObjects(number, [_myObject objectForKey:@"onlySetterNumber"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"onlySetterNumber"], number, nil);
 }
 
 - (void)testOnlyGetterNumberShouldBeAccessFromCustomSetter
@@ -234,7 +259,7 @@
   NSNumber *number = @123;
   [_myObject setObject:number forKey:@"onlyGetterNumber"];
 
-  GHAssertEqualObjects(number, _myObject.isGetter, nil);
+  GHAssertEqualObjects(_myObject.isGetter, number, nil);
 }
 
 - (void)testOnlyGetterNumberShouldProvideStandardSetter
@@ -242,7 +267,7 @@
   NSNumber *number = @123;
   _myObject.onlyGetterNumber = number;
 
-  GHAssertEqualObjects(number, [_myObject objectForKey:@"onlyGetterNumber"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"onlyGetterNumber"], number, nil);
 }
 
 - (void)testBothGetterAndSetterNumberShouldBeAccessFromCustomSetter
@@ -250,7 +275,7 @@
   NSNumber *number = @123;
   [_myObject setObject:number forKey:@"bothGetterAndSetterNumber"];
 
-  GHAssertEqualObjects(number, _myObject.isGetterBoth, nil);
+  GHAssertEqualObjects(_myObject.isGetterBoth, number, nil);
 }
 
 - (void)testBothGetterAndSetterNumberShouldBeSetFromCustomSetter
@@ -258,7 +283,7 @@
   NSNumber *number = @123;
   [_myObject setSetterBoth:number];
 
-  GHAssertEqualObjects(number, [_myObject objectForKey:@"bothGetterAndSetterNumber"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"bothGetterAndSetterNumber"], number, nil);
 }
 
 - (void)testReadOnlyStringAllowsUsingItsGetter
@@ -266,7 +291,7 @@
   NSString *theString = @"the string";
   [_myObject setObject:theString forKey:@"readOnlyString"];
 
-  GHAssertEqualStrings(theString, _myObject.readOnlyString, nil);
+  GHAssertEqualStrings(_myObject.readOnlyString, theString, nil);
 }
 
 - (void)testReadOnlyStringDisallowsUsingItsSetter
@@ -304,235 +329,273 @@
   // Since PFObject only support objects, we have to box our number
   [_myObject setObject:@(theInteger) forKey:@"transientAssignUInteger"];
 
-  GHAssertEquals(0u, _myObject.transientAssignUInteger, nil);
+  GHAssertEquals(_myObject.transientAssignUInteger, 0u, nil);
 }
 
 - (void)testCharPropertyInitsToZero
 {
-  GHAssertEquals((char)'\0', _myObject.charProperty, nil);
+  GHAssertEquals(_myObject.charProperty, (char)'\0', nil);
 }
 
 - (void)testCharPropertyShouldStoreItsValueIntoPFObject
 {
   _myObject.charProperty = (char)'D';
 
-  GHAssertEqualObjects(@'D', [_myObject objectForKey:@"charProperty"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"charProperty"], @'D', nil);
 }
 
 - (void)testCharPropertyShouldRetrieveItsValueFromPFObject
 {
   [_myObject setObject:@'D' forKey:@"charProperty"];
 
-  GHAssertEquals((char)'D', _myObject.charProperty, nil);
+  GHAssertEquals(_myObject.charProperty, (char)'D', nil);
 }
 
 - (void)testUnsignedCharPropertyInitsToZero
 {
-  GHAssertEquals((unsigned char)'\0', _myObject.unsignedCharProperty, nil);
+  GHAssertEquals(_myObject.unsignedCharProperty, (unsigned char)'\0', nil);
 }
 
 - (void)testUnsignedCharPropertyShouldStoreItsValueIntoPFObject
 {
   _myObject.unsignedCharProperty = (unsigned char)192;
 
-  GHAssertEqualObjects([NSNumber numberWithUnsignedChar:192], [_myObject objectForKey:@"unsignedCharProperty"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"unsignedCharProperty"], [NSNumber numberWithUnsignedChar:192], nil);
 }
 
 - (void)testUnsignedCharPropertyShouldRetrieveItsValueFromPFObject
 {
   [_myObject setObject:[NSNumber numberWithUnsignedChar:192] forKey:@"unsignedCharProperty"];
 
-  GHAssertEquals((unsigned char)192, _myObject.unsignedCharProperty, nil);
+  GHAssertEquals(_myObject.unsignedCharProperty, (unsigned char)192, nil);
 }
 
 - (void)testShortPropertyInitsToZero
 {
-  GHAssertEquals((short)0, _myObject.shortProperty, nil);
+  GHAssertEquals(_myObject.shortProperty, (short)0, nil);
 }
 
 - (void)testShortPropertyShouldStoreItsValueIntoPFObject
 {
   _myObject.shortProperty = (short)512;
 
-  GHAssertEqualObjects([NSNumber numberWithShort:512], [_myObject objectForKey:@"shortProperty"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"shortProperty"], [NSNumber numberWithShort:512], nil);
 }
 
 - (void)testShortPropertyShouldRetrieveItsValueFromPFObject
 {
   [_myObject setObject:[NSNumber numberWithShort:512] forKey:@"shortProperty"];
 
-  GHAssertEquals((short)512, _myObject.shortProperty, nil);
+  GHAssertEquals(_myObject.shortProperty, (short)512, nil);
 }
 
 - (void)testUnsignedShortPropertyInitsToZero
 {
-  GHAssertEquals((unsigned short)0, _myObject.unsignedShortProperty, nil);
+  GHAssertEquals(_myObject.unsignedShortProperty, (unsigned short)0, nil);
 }
 
 - (void)testUnsignedShortPropertyShouldStoreItsValueIntoPFObject
 {
   _myObject.unsignedShortProperty = (unsigned short)40000;
 
-  GHAssertEqualObjects([NSNumber numberWithUnsignedShort:40000], [_myObject objectForKey:@"unsignedShortProperty"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"unsignedShortProperty"], [NSNumber numberWithUnsignedShort:40000], nil);
 }
 
 - (void)testUnsignedShortPropertyShouldRetrieveItsValueFromPFObject
 {
   [_myObject setObject:[NSNumber numberWithUnsignedShort:40000] forKey:@"unsignedShortProperty"];
 
-  GHAssertEquals((unsigned short)40000, _myObject.unsignedShortProperty, nil);
+  GHAssertEquals(_myObject.unsignedShortProperty, (unsigned short)40000, nil);
 }
 
 - (void)testIntPropertyInitsToZero
 {
-  GHAssertEquals(0, _myObject.intProperty, nil);
+  GHAssertEquals(_myObject.intProperty, 0, nil);
 }
 
 - (void)testIntPropertyShouldStoreItsValueIntoPFObject
 {
   _myObject.intProperty = 70000;
 
-  GHAssertEqualObjects(@70000, [_myObject objectForKey:@"intProperty"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"intProperty"], @70000, nil);
 }
 
 - (void)testIntPropertyShouldRetrieveItsValueFromPFObject
 {
   [_myObject setObject:@70000 forKey:@"intProperty"];
 
-  GHAssertEquals(70000, _myObject.intProperty, nil);
+  GHAssertEquals(_myObject.intProperty, 70000, nil);
 }
 
 - (void)testUnsignedIntPropertyInitsToZero
 {
-  GHAssertEquals(0u, _myObject.unsignedIntProperty, nil);
+  GHAssertEquals(_myObject.unsignedIntProperty, 0u, nil);
 }
 
 - (void)testUnsignedIntPropertyShouldStoreItsValueIntoPFObject
 {
   _myObject.unsignedIntProperty = INT_MAX + 1u;
 
-  GHAssertEqualObjects(@(INT_MAX + 1u), [_myObject objectForKey:@"unsignedIntProperty"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"unsignedIntProperty"], @(INT_MAX + 1u), nil);
 }
 
 - (void)testUnsignedIntPropertyShouldRetrieveItsValueFromPFObject
 {
   [_myObject setObject:@(INT_MAX + 1u) forKey:@"unsignedIntProperty"];
 
-  GHAssertEquals(INT_MAX + 1u, _myObject.unsignedIntProperty, nil);
+  GHAssertEquals(_myObject.unsignedIntProperty, INT_MAX + 1u, nil);
 }
 
 - (void)testLongPropertyInitsToZero
 {
-  GHAssertEquals(0l, _myObject.longProperty, nil);
+  GHAssertEquals(_myObject.longProperty, 0l, nil);
 }
 
 - (void)testLongPropertyShouldStoreItsValueIntoPFObject
 {
   _myObject.longProperty = 70000l;
 
-  GHAssertEqualObjects(@70000l, [_myObject objectForKey:@"longProperty"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"longProperty"], @70000l, nil);
 }
 
 - (void)testLongPropertyShouldRetrieveItsValueFromPFObject
 {
   [_myObject setObject:@70000l forKey:@"longProperty"];
 
-  GHAssertEquals(70000l, _myObject.longProperty, nil);
+  GHAssertEquals(_myObject.longProperty, 70000l, nil);
 }
 
 - (void)testUnsignedLongPropertyInitsToZero
 {
-  GHAssertEquals(0ul, _myObject.unsignedLongProperty, nil);
+  GHAssertEquals(_myObject.unsignedLongProperty, 0ul, nil);
 }
 
 - (void)testUnsignedLongPropertyShouldStoreItsValueIntoPFObject
 {
   _myObject.unsignedLongProperty = LONG_MAX + 1u;
 
-  GHAssertEqualObjects(@(LONG_MAX + 1lu), [_myObject objectForKey:@"unsignedLongProperty"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"unsignedLongProperty"], @(LONG_MAX + 1lu), nil);
 }
 
 - (void)testUnsignedLongPropertyShouldRetrieveItsValueFromPFObject
 {
   [_myObject setObject:@(LONG_MAX + 1lu) forKey:@"unsignedLongProperty"];
 
-  GHAssertEquals(LONG_MAX + 1lu, _myObject.unsignedLongProperty, nil);
+  GHAssertEquals(_myObject.unsignedLongProperty, LONG_MAX + 1lu, nil);
 }
 
 - (void)testLongLongPropertyInitsToZero
 {
-  GHAssertEquals(0ll, _myObject.longLongProperty, nil);
+  GHAssertEquals(_myObject.longLongProperty, 0ll, nil);
 }
 
 - (void)testLongLongPropertyShouldStoreItsValueIntoPFObject
 {
   _myObject.longLongProperty = 70000ll;
 
-  GHAssertEqualObjects(@70000ll, [_myObject objectForKey:@"longLongProperty"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"longLongProperty"], @70000ll, nil);
 }
 
 - (void)testLongLongPropertyShouldRetrieveItsValueFromPFObject
 {
   [_myObject setObject:@70000ll forKey:@"longLongProperty"];
 
-  GHAssertEquals(70000ll, _myObject.longLongProperty, nil);
+  GHAssertEquals(_myObject.longLongProperty, 70000ll, nil);
 }
 
 - (void)testUnsignedLongLongPropertyInitsToZero
 {
-  GHAssertEquals(0ull, _myObject.unsignedLongLongProperty, nil);
+  GHAssertEquals(_myObject.unsignedLongLongProperty, 0ull, nil);
 }
 
 - (void)testUnsignedLongLongPropertyShouldStoreItsValueIntoPFObject
 {
   _myObject.unsignedLongLongProperty = LONG_LONG_MAX + 1ull;
 
-  GHAssertEqualObjects(@(LONG_LONG_MAX + 1llu), [_myObject objectForKey:@"unsignedLongLongProperty"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"unsignedLongLongProperty"], @(LONG_LONG_MAX + 1llu), nil);
 }
 
 - (void)testUnsignedLongLongPropertyShouldRetrieveItsValueFromPFObject
 {
   [_myObject setObject:@(LONG_LONG_MAX + 1llu) forKey:@"unsignedLongLongProperty"];
 
-  GHAssertEquals(LONG_LONG_MAX + 1llu, _myObject.unsignedLongLongProperty, nil);
+  GHAssertEquals(_myObject.unsignedLongLongProperty, LONG_LONG_MAX + 1llu, nil);
 }
 
 - (void)testFloatPropertyInitsToZero
 {
-  GHAssertEquals(0.0f, _myObject.floatProperty, nil);
+  GHAssertEquals(_myObject.floatProperty, 0.0f, nil);
 }
 
 - (void)testFloatPropertyShouldStoreItsValueIntoPFObject
 {
   _myObject.floatProperty = 123.456f;
 
-  GHAssertEqualObjects(@123.456f, [_myObject objectForKey:@"floatProperty"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"floatProperty"], @123.456f, nil);
 }
 
 - (void)testFloatPropertyShouldRetrieveItsValueFromPFObject
 {
   [_myObject setObject:@123.456f forKey:@"floatProperty"];
 
-  GHAssertEqualsWithAccuracy(123.456f, _myObject.floatProperty, 0.1f, nil);
+  GHAssertEqualsWithAccuracy(_myObject.floatProperty, 123.456f, 0.1f, nil);
 }
 
 - (void)testDoublePropertyInitsToZero
 {
-  GHAssertEquals(0.0, _myObject.doubleProperty, nil);
+  GHAssertEquals(_myObject.doubleProperty, 0.0, nil);
 }
 
 - (void)testDoublePropertyShouldStoreItsValueIntoPFObject
 {
   _myObject.doubleProperty = 123.456;
 
-  GHAssertEqualObjects(@123.456, [_myObject objectForKey:@"doubleProperty"], nil);
+  GHAssertEqualObjects([_myObject objectForKey:@"doubleProperty"], @123.456, nil);
 }
 
 - (void)testDoublePropertyShouldRetrieveItsValueFromPFObject
 {
   [_myObject setObject:@123.456 forKey:@"doubleProperty"];
 
-  GHAssertEqualsWithAccuracy(123.456, _myObject.doubleProperty, 0.1, nil);
+  GHAssertEqualsWithAccuracy(_myObject.doubleProperty, 123.456, 0.1, nil);
+}
+
+- (void)testCustomGetterShouldReturnDefault
+{
+  DRTMyPFObjectSubclassWithCustomGetter *object = [[DRTMyPFObjectSubclassWithCustomGetter alloc] init];
+
+  GHAssertEqualStrings(object.stringWithDefault, @"default", nil);
+}
+
+- (void)testCustomGetterShouldReturnStoredValue
+{
+  DRTMyPFObjectSubclassWithCustomGetter *object = [[DRTMyPFObjectSubclassWithCustomGetter alloc] init];
+  [object setObject:@"not default" forKey:@"stringWithDefault"];
+
+  GHAssertEqualStrings(object.stringWithDefault, @"not default", nil);
+}
+
+- (void)testChildClassNameShouldBeItsClass
+{
+  DRTMyPFObjectChild *child = [[DRTMyPFObjectChild alloc] init];
+
+  GHAssertEqualStrings(child.className, @"DRTMyPFObjectChild", nil);
+}
+
+- (void)testChildShouldStoreParentProperty
+{
+  DRTMyPFObjectChild *child = [[DRTMyPFObjectChild alloc] init];
+  child.stringInParent = @"string in parent";
+
+  GHAssertEqualStrings([child objectForKey:@"stringInParent"], @"string in parent", nil);
+}
+
+- (void)testChildShouldRetrieveParentProperty
+{
+  DRTMyPFObjectChild *child = [[DRTMyPFObjectChild alloc] init];
+  [child setObject:@"string in parent" forKey:@"stringInParent"];
+
+  GHAssertEqualStrings(child.stringInParent, @"string in parent", nil);
 }
 
 @end
@@ -565,5 +628,42 @@
 {
     return [self initWithAutoClassName];
 }
+
+@end
+
+
+@implementation DRTMyPFObjectSubclassWithCustomGetter
+
+@dynamic stringWithDefault;
+
+- (id)init
+{
+  return [self initWithAutoClassName];
+}
+
+- (NSString *)stringWithDefault
+{
+  NSString *stringWithDefault = [self objectForKey:@"stringWithDefault"];
+  return stringWithDefault ?: @"default";
+}
+
+@end
+
+
+@implementation DRTMyPFObjectParent
+
+@dynamic stringInParent;
+
+- (id)init
+{
+  return [self initWithAutoClassName];
+}
+
+@end
+
+
+@implementation DRTMyPFObjectChild
+
+@dynamic stringInChild;
 
 @end
