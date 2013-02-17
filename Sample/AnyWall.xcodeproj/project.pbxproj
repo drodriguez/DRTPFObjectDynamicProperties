@@ -1,0 +1,683 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2CD959510FCF4B6D93888CCA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FD8D08D8F004CBE9E2E3893 /* libPods.a */; };
+		2F3BD81214F20F9E00BDC051 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F3BD81114F20F9E00BDC051 /* Default@2x.png */; };
+		2F3BD81414F2117100BDC051 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F3BD81314F2117100BDC051 /* Default.png */; };
+		2F3BD81614F2149500BDC051 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F3BD81514F2149500BDC051 /* icon@2x.png */; };
+		2F3BD81814F2149C00BDC051 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F3BD81714F2149B00BDC051 /* icon.png */; };
+		65F3510316D03F0F008342B8 /* ParseCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 65F3510216D03F0F008342B8 /* ParseCredentials.m */; };
+		D4EB9C2C153E809B001B67A7 /* Button.png in Resources */ = {isa = PBXBuildFile; fileRef = D4EB9C2A153E809B001B67A7 /* Button.png */; };
+		D4EB9C2D153E809B001B67A7 /* Button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4EB9C2B153E809B001B67A7 /* Button@2x.png */; };
+		D4EB9C34153E8883001B67A7 /* just_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4EB9C33153E8883001B67A7 /* just_background@2x.png */; };
+		D4EB9C36153F7913001B67A7 /* just_background.png in Resources */ = {isa = PBXBuildFile; fileRef = D4EB9C35153F7912001B67A7 /* just_background.png */; };
+		E5458B6614D77BEA003BE4FF /* PAWSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5458B6414D77BEA003BE4FF /* PAWSettingsViewController.m */; };
+		E5458B6714D77BEA003BE4FF /* PAWSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5458B6514D77BEA003BE4FF /* PAWSettingsViewController.xib */; };
+		E5458B6C14D8B2E3003BE4FF /* PAWWallPostCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5458B6A14D8B2E3003BE4FF /* PAWWallPostCreateViewController.m */; };
+		E5458B6D14D8B2E3003BE4FF /* PAWWallPostCreateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5458B6B14D8B2E3003BE4FF /* PAWWallPostCreateViewController.xib */; };
+		E554D5C314E32EFB008D027A /* PAWPost.m in Sources */ = {isa = PBXBuildFile; fileRef = E554D5C214E32EFB008D027A /* PAWPost.m */; };
+		E56E83F714D72E1100E856AB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E56E83F614D72E1100E856AB /* UIKit.framework */; };
+		E56E83F914D72E1100E856AB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E56E83F814D72E1100E856AB /* Foundation.framework */; };
+		E56E83FB14D72E1100E856AB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E56E83FA14D72E1100E856AB /* CoreGraphics.framework */; };
+		E56E840114D72E1100E856AB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E56E83FF14D72E1100E856AB /* InfoPlist.strings */; };
+		E56E840314D72E1100E856AB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E56E840214D72E1100E856AB /* main.m */; };
+		E56E840714D72E1100E856AB /* PAWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E56E840614D72E1100E856AB /* PAWAppDelegate.m */; };
+		E56E840A14D72E1100E856AB /* PAWWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E56E840914D72E1100E856AB /* PAWWelcomeViewController.m */; };
+		E572726B14E0807F004A9423 /* PAWWallPostsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E572726A14E0807F004A9423 /* PAWWallPostsTableViewController.m */; };
+		E5743F2914E30154004BBD5C /* PAWSearchRadius.m in Sources */ = {isa = PBXBuildFile; fileRef = E5743F2814E30154004BBD5C /* PAWSearchRadius.m */; };
+		E5743F2D14E302A0004BBD5C /* PAWCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5743F2C14E302A0004BBD5C /* PAWCircleView.m */; };
+		E5AF78F314E0B725005B6234 /* PAWActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5AF78F214E0B725005B6234 /* PAWActivityView.m */; };
+		E5C3303814D9C39900089B64 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C3303714D9C39900089B64 /* AudioToolbox.framework */; };
+		E5C3303A14D9C3A200089B64 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C3303914D9C3A200089B64 /* CFNetwork.framework */; };
+		E5C3303C14D9C3A800089B64 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C3303B14D9C3A800089B64 /* SystemConfiguration.framework */; };
+		E5C3303E14D9C3AE00089B64 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C3303D14D9C3AE00089B64 /* MobileCoreServices.framework */; };
+		E5C3304514D9C3E100089B64 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C3304314D9C3C900089B64 /* QuartzCore.framework */; };
+		E5C3304614D9C3E100089B64 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C3304114D9C3C200089B64 /* Security.framework */; };
+		E5C3304714D9C3E100089B64 /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C3303F14D9C3BC00089B64 /* libz.1.1.3.dylib */; };
+		E5C3305014DA024F00089B64 /* PAWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C3304E14DA024E00089B64 /* PAWLoginViewController.m */; };
+		E5C3305114DA024F00089B64 /* PAWLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5C3304F14DA024F00089B64 /* PAWLoginViewController.xib */; };
+		E5CAAFEB14D7316F00D97A18 /* PAWWelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5CAAFE914D7316F00D97A18 /* PAWWelcomeViewController.xib */; };
+		E5CAAFF414D733DC00D97A18 /* PAWWallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5CAAFF214D733DC00D97A18 /* PAWWallViewController.m */; };
+		E5CAAFF514D733DC00D97A18 /* PAWWallViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5CAAFF314D733DC00D97A18 /* PAWWallViewController.xib */; };
+		E5CAAFF814D7376500D97A18 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5CAAFF714D7376500D97A18 /* MapKit.framework */; };
+		E5CAAFFA14D738E800D97A18 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5CAAFF914D738E800D97A18 /* CoreLocation.framework */; };
+		E5E3D1F214DA20220074DA18 /* PAWNewUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5E3D1F014DA20210074DA18 /* PAWNewUserViewController.m */; };
+		E5E3D1F314DA20220074DA18 /* PAWNewUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5E3D1F114DA20210074DA18 /* PAWNewUserViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2F3BD81114F20F9E00BDC051 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "../Default@2x.png"; sourceTree = "<group>"; };
+		2F3BD81314F2117100BDC051 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
+		2F3BD81514F2149500BDC051 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon@2x.png"; path = "../icon@2x.png"; sourceTree = "<group>"; };
+		2F3BD81714F2149B00BDC051 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = ../icon.png; sourceTree = "<group>"; };
+		3FD8D08D8F004CBE9E2E3893 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		65F3510116D03F0F008342B8 /* ParseCredentials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseCredentials.h; sourceTree = "<group>"; };
+		65F3510216D03F0F008342B8 /* ParseCredentials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseCredentials.m; sourceTree = "<group>"; };
+		87E1AB2B85CD4843BA2F39CB /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		D4EB9C2A153E809B001B67A7 /* Button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Button.png; sourceTree = "<group>"; };
+		D4EB9C2B153E809B001B67A7 /* Button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Button@2x.png"; sourceTree = "<group>"; };
+		D4EB9C33153E8883001B67A7 /* just_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "just_background@2x.png"; sourceTree = "<group>"; };
+		D4EB9C35153F7912001B67A7 /* just_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = just_background.png; sourceTree = "<group>"; };
+		E5458B6314D77BEA003BE4FF /* PAWSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAWSettingsViewController.h; sourceTree = "<group>"; };
+		E5458B6414D77BEA003BE4FF /* PAWSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAWSettingsViewController.m; sourceTree = "<group>"; };
+		E5458B6514D77BEA003BE4FF /* PAWSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PAWSettingsViewController.xib; sourceTree = "<group>"; };
+		E5458B6914D8B2E3003BE4FF /* PAWWallPostCreateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAWWallPostCreateViewController.h; sourceTree = "<group>"; };
+		E5458B6A14D8B2E3003BE4FF /* PAWWallPostCreateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAWWallPostCreateViewController.m; sourceTree = "<group>"; };
+		E5458B6B14D8B2E3003BE4FF /* PAWWallPostCreateViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PAWWallPostCreateViewController.xib; sourceTree = "<group>"; };
+		E554D5C114E32EFB008D027A /* PAWPost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAWPost.h; sourceTree = "<group>"; };
+		E554D5C214E32EFB008D027A /* PAWPost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAWPost.m; sourceTree = "<group>"; };
+		E56E83F214D72E1100E856AB /* AnyWall.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnyWall.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E56E83F614D72E1100E856AB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		E56E83F814D72E1100E856AB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		E56E83FA14D72E1100E856AB /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		E56E83FE14D72E1100E856AB /* AnyWall-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AnyWall-Info.plist"; sourceTree = "<group>"; };
+		E56E840014D72E1100E856AB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E56E840214D72E1100E856AB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E56E840414D72E1100E856AB /* AnyWall-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AnyWall-Prefix.pch"; sourceTree = "<group>"; };
+		E56E840514D72E1100E856AB /* PAWAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PAWAppDelegate.h; sourceTree = "<group>"; };
+		E56E840614D72E1100E856AB /* PAWAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PAWAppDelegate.m; sourceTree = "<group>"; };
+		E56E840814D72E1100E856AB /* PAWWelcomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PAWWelcomeViewController.h; sourceTree = "<group>"; };
+		E56E840914D72E1100E856AB /* PAWWelcomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PAWWelcomeViewController.m; sourceTree = "<group>"; };
+		E572726914E0807F004A9423 /* PAWWallPostsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAWWallPostsTableViewController.h; sourceTree = "<group>"; };
+		E572726A14E0807F004A9423 /* PAWWallPostsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAWWallPostsTableViewController.m; sourceTree = "<group>"; };
+		E5743F2714E30154004BBD5C /* PAWSearchRadius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAWSearchRadius.h; sourceTree = "<group>"; };
+		E5743F2814E30154004BBD5C /* PAWSearchRadius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAWSearchRadius.m; sourceTree = "<group>"; };
+		E5743F2B14E302A0004BBD5C /* PAWCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAWCircleView.h; sourceTree = "<group>"; };
+		E5743F2C14E302A0004BBD5C /* PAWCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAWCircleView.m; sourceTree = "<group>"; };
+		E5AF78F114E0B725005B6234 /* PAWActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAWActivityView.h; sourceTree = "<group>"; };
+		E5AF78F214E0B725005B6234 /* PAWActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAWActivityView.m; sourceTree = "<group>"; };
+		E5C3303714D9C39900089B64 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		E5C3303914D9C3A200089B64 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		E5C3303B14D9C3A800089B64 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		E5C3303D14D9C3AE00089B64 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		E5C3303F14D9C3BC00089B64 /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
+		E5C3304114D9C3C200089B64 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		E5C3304314D9C3C900089B64 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		E5C3304D14DA024E00089B64 /* PAWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAWLoginViewController.h; sourceTree = "<group>"; };
+		E5C3304E14DA024E00089B64 /* PAWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAWLoginViewController.m; sourceTree = "<group>"; };
+		E5C3304F14DA024F00089B64 /* PAWLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PAWLoginViewController.xib; sourceTree = "<group>"; };
+		E5CAAFEA14D7316F00D97A18 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PAWWelcomeViewController.xib; sourceTree = "<group>"; };
+		E5CAAFF114D733DC00D97A18 /* PAWWallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAWWallViewController.h; sourceTree = "<group>"; };
+		E5CAAFF214D733DC00D97A18 /* PAWWallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAWWallViewController.m; sourceTree = "<group>"; };
+		E5CAAFF314D733DC00D97A18 /* PAWWallViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PAWWallViewController.xib; sourceTree = "<group>"; };
+		E5CAAFF714D7376500D97A18 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		E5CAAFF914D738E800D97A18 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		E5E3D1EF14DA20210074DA18 /* PAWNewUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAWNewUserViewController.h; sourceTree = "<group>"; };
+		E5E3D1F014DA20210074DA18 /* PAWNewUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAWNewUserViewController.m; sourceTree = "<group>"; };
+		E5E3D1F114DA20210074DA18 /* PAWNewUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PAWNewUserViewController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E56E83EF14D72E1100E856AB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5C3304514D9C3E100089B64 /* QuartzCore.framework in Frameworks */,
+				E5C3304614D9C3E100089B64 /* Security.framework in Frameworks */,
+				E5C3304714D9C3E100089B64 /* libz.1.1.3.dylib in Frameworks */,
+				E5C3303E14D9C3AE00089B64 /* MobileCoreServices.framework in Frameworks */,
+				E5C3303C14D9C3A800089B64 /* SystemConfiguration.framework in Frameworks */,
+				E5C3303A14D9C3A200089B64 /* CFNetwork.framework in Frameworks */,
+				E5C3303814D9C39900089B64 /* AudioToolbox.framework in Frameworks */,
+				E56E83FB14D72E1100E856AB /* CoreGraphics.framework in Frameworks */,
+				E5CAAFFA14D738E800D97A18 /* CoreLocation.framework in Frameworks */,
+				E5CAAFF814D7376500D97A18 /* MapKit.framework in Frameworks */,
+				E56E83F714D72E1100E856AB /* UIKit.framework in Frameworks */,
+				E56E83F914D72E1100E856AB /* Foundation.framework in Frameworks */,
+				2CD959510FCF4B6D93888CCA /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E526A82D14F331D40074109C /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				D4EB9C2A153E809B001B67A7 /* Button.png */,
+				D4EB9C2B153E809B001B67A7 /* Button@2x.png */,
+				D4EB9C33153E8883001B67A7 /* just_background@2x.png */,
+				D4EB9C35153F7912001B67A7 /* just_background.png */,
+				2F3BD81714F2149B00BDC051 /* icon.png */,
+				2F3BD81514F2149500BDC051 /* icon@2x.png */,
+				2F3BD81314F2117100BDC051 /* Default.png */,
+				2F3BD81114F20F9E00BDC051 /* Default@2x.png */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
+		E56E83E714D72E1100E856AB = {
+			isa = PBXGroup;
+			children = (
+				E56E83FC14D72E1100E856AB /* AnyWall */,
+				E56E83F514D72E1100E856AB /* Frameworks */,
+				E56E83F314D72E1100E856AB /* Products */,
+				87E1AB2B85CD4843BA2F39CB /* Pods.xcconfig */,
+			);
+			sourceTree = "<group>";
+			usesTabs = 1;
+		};
+		E56E83F314D72E1100E856AB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E56E83F214D72E1100E856AB /* AnyWall.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E56E83F514D72E1100E856AB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E5C3304314D9C3C900089B64 /* QuartzCore.framework */,
+				E5C3304114D9C3C200089B64 /* Security.framework */,
+				E5C3303F14D9C3BC00089B64 /* libz.1.1.3.dylib */,
+				E5C3303D14D9C3AE00089B64 /* MobileCoreServices.framework */,
+				E5C3303B14D9C3A800089B64 /* SystemConfiguration.framework */,
+				E5C3303914D9C3A200089B64 /* CFNetwork.framework */,
+				E5C3303714D9C39900089B64 /* AudioToolbox.framework */,
+				E5CAAFF914D738E800D97A18 /* CoreLocation.framework */,
+				E5CAAFF714D7376500D97A18 /* MapKit.framework */,
+				E56E83F614D72E1100E856AB /* UIKit.framework */,
+				E56E83F814D72E1100E856AB /* Foundation.framework */,
+				E56E83FA14D72E1100E856AB /* CoreGraphics.framework */,
+				3FD8D08D8F004CBE9E2E3893 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E56E83FC14D72E1100E856AB /* AnyWall */ = {
+			isa = PBXGroup;
+			children = (
+				E56E840514D72E1100E856AB /* PAWAppDelegate.h */,
+				E56E840614D72E1100E856AB /* PAWAppDelegate.m */,
+				E5743F2A14E3024B004BBD5C /* Model Objects */,
+				E5AF78F514E0C25C005B6234 /* Custom Views */,
+				E5CAAFF614D7342200D97A18 /* View Controllers */,
+				E526A82D14F331D40074109C /* Assets */,
+				E56E83FD14D72E1100E856AB /* Supporting Files */,
+				65F3510116D03F0F008342B8 /* ParseCredentials.h */,
+				65F3510216D03F0F008342B8 /* ParseCredentials.m */,
+			);
+			path = AnyWall;
+			sourceTree = "<group>";
+		};
+		E56E83FD14D72E1100E856AB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E56E83FE14D72E1100E856AB /* AnyWall-Info.plist */,
+				E56E83FF14D72E1100E856AB /* InfoPlist.strings */,
+				E56E840214D72E1100E856AB /* main.m */,
+				E56E840414D72E1100E856AB /* AnyWall-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E5743F2A14E3024B004BBD5C /* Model Objects */ = {
+			isa = PBXGroup;
+			children = (
+				E5743F2F14E3284F004BBD5C /* MapKit */,
+			);
+			name = "Model Objects";
+			sourceTree = "<group>";
+		};
+		E5743F2E14E30D29004BBD5C /* MapKit */ = {
+			isa = PBXGroup;
+			children = (
+				E5743F2B14E302A0004BBD5C /* PAWCircleView.h */,
+				E5743F2C14E302A0004BBD5C /* PAWCircleView.m */,
+			);
+			name = MapKit;
+			sourceTree = "<group>";
+		};
+		E5743F2F14E3284F004BBD5C /* MapKit */ = {
+			isa = PBXGroup;
+			children = (
+				E5743F2714E30154004BBD5C /* PAWSearchRadius.h */,
+				E5743F2814E30154004BBD5C /* PAWSearchRadius.m */,
+				E554D5C114E32EFB008D027A /* PAWPost.h */,
+				E554D5C214E32EFB008D027A /* PAWPost.m */,
+			);
+			name = MapKit;
+			sourceTree = "<group>";
+		};
+		E5AF78F514E0C25C005B6234 /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				E5AF78F114E0B725005B6234 /* PAWActivityView.h */,
+				E5AF78F214E0B725005B6234 /* PAWActivityView.m */,
+				E5743F2E14E30D29004BBD5C /* MapKit */,
+			);
+			name = "Custom Views";
+			sourceTree = "<group>";
+		};
+		E5CAAFF614D7342200D97A18 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E56E840814D72E1100E856AB /* PAWWelcomeViewController.h */,
+				E56E840914D72E1100E856AB /* PAWWelcomeViewController.m */,
+				E5F7574914DB642A008CCAFE /* User Creation/Login */,
+				E5F7574B14DB643A008CCAFE /* AnyWall View and Posts */,
+				E5F7574C14DB6447008CCAFE /* Settings */,
+				E5CAAFFF14D75FC400D97A18 /* XIB Resources */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		E5CAAFFF14D75FC400D97A18 /* XIB Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E5CAAFE914D7316F00D97A18 /* PAWWelcomeViewController.xib */,
+				E5E3D1F114DA20210074DA18 /* PAWNewUserViewController.xib */,
+				E5C3304F14DA024F00089B64 /* PAWLoginViewController.xib */,
+				E5CAAFF314D733DC00D97A18 /* PAWWallViewController.xib */,
+				E5458B6B14D8B2E3003BE4FF /* PAWWallPostCreateViewController.xib */,
+				E5458B6514D77BEA003BE4FF /* PAWSettingsViewController.xib */,
+			);
+			name = "XIB Resources";
+			sourceTree = "<group>";
+		};
+		E5F7574914DB642A008CCAFE /* User Creation/Login */ = {
+			isa = PBXGroup;
+			children = (
+				E5E3D1EF14DA20210074DA18 /* PAWNewUserViewController.h */,
+				E5E3D1F014DA20210074DA18 /* PAWNewUserViewController.m */,
+				E5C3304D14DA024E00089B64 /* PAWLoginViewController.h */,
+				E5C3304E14DA024E00089B64 /* PAWLoginViewController.m */,
+			);
+			name = "User Creation/Login";
+			sourceTree = "<group>";
+		};
+		E5F7574B14DB643A008CCAFE /* AnyWall View and Posts */ = {
+			isa = PBXGroup;
+			children = (
+				E5CAAFF114D733DC00D97A18 /* PAWWallViewController.h */,
+				E5CAAFF214D733DC00D97A18 /* PAWWallViewController.m */,
+				E5458B6914D8B2E3003BE4FF /* PAWWallPostCreateViewController.h */,
+				E5458B6A14D8B2E3003BE4FF /* PAWWallPostCreateViewController.m */,
+				E572726914E0807F004A9423 /* PAWWallPostsTableViewController.h */,
+				E572726A14E0807F004A9423 /* PAWWallPostsTableViewController.m */,
+			);
+			name = "AnyWall View and Posts";
+			sourceTree = "<group>";
+		};
+		E5F7574C14DB6447008CCAFE /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				E5458B6314D77BEA003BE4FF /* PAWSettingsViewController.h */,
+				E5458B6414D77BEA003BE4FF /* PAWSettingsViewController.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E56E83F114D72E1100E856AB /* AnyWall */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E56E841014D72E1100E856AB /* Build configuration list for PBXNativeTarget "AnyWall" */;
+			buildPhases = (
+				E56E83EE14D72E1100E856AB /* Sources */,
+				E56E83EF14D72E1100E856AB /* Frameworks */,
+				E56E83F014D72E1100E856AB /* Resources */,
+				93189BD854184DC9BCB7F3BA /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AnyWall;
+			productName = AnyWall;
+			productReference = E56E83F214D72E1100E856AB /* AnyWall.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E56E83E914D72E1100E856AB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = Parse;
+			};
+			buildConfigurationList = E56E83EC14D72E1100E856AB /* Build configuration list for PBXProject "AnyWall" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = E56E83E714D72E1100E856AB;
+			productRefGroup = E56E83F314D72E1100E856AB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E56E83F114D72E1100E856AB /* AnyWall */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E56E83F014D72E1100E856AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E56E840114D72E1100E856AB /* InfoPlist.strings in Resources */,
+				E5CAAFEB14D7316F00D97A18 /* PAWWelcomeViewController.xib in Resources */,
+				E5CAAFF514D733DC00D97A18 /* PAWWallViewController.xib in Resources */,
+				E5458B6714D77BEA003BE4FF /* PAWSettingsViewController.xib in Resources */,
+				E5458B6D14D8B2E3003BE4FF /* PAWWallPostCreateViewController.xib in Resources */,
+				E5C3305114DA024F00089B64 /* PAWLoginViewController.xib in Resources */,
+				E5E3D1F314DA20220074DA18 /* PAWNewUserViewController.xib in Resources */,
+				2F3BD81214F20F9E00BDC051 /* Default@2x.png in Resources */,
+				2F3BD81414F2117100BDC051 /* Default.png in Resources */,
+				2F3BD81614F2149500BDC051 /* icon@2x.png in Resources */,
+				2F3BD81814F2149C00BDC051 /* icon.png in Resources */,
+				D4EB9C2C153E809B001B67A7 /* Button.png in Resources */,
+				D4EB9C2D153E809B001B67A7 /* Button@2x.png in Resources */,
+				D4EB9C34153E8883001B67A7 /* just_background@2x.png in Resources */,
+				D4EB9C36153F7913001B67A7 /* just_background.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		93189BD854184DC9BCB7F3BA /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E56E83EE14D72E1100E856AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E56E840314D72E1100E856AB /* main.m in Sources */,
+				E56E840714D72E1100E856AB /* PAWAppDelegate.m in Sources */,
+				E56E840A14D72E1100E856AB /* PAWWelcomeViewController.m in Sources */,
+				E5CAAFF414D733DC00D97A18 /* PAWWallViewController.m in Sources */,
+				E5458B6614D77BEA003BE4FF /* PAWSettingsViewController.m in Sources */,
+				E5458B6C14D8B2E3003BE4FF /* PAWWallPostCreateViewController.m in Sources */,
+				E5C3305014DA024F00089B64 /* PAWLoginViewController.m in Sources */,
+				E5E3D1F214DA20220074DA18 /* PAWNewUserViewController.m in Sources */,
+				E572726B14E0807F004A9423 /* PAWWallPostsTableViewController.m in Sources */,
+				E5AF78F314E0B725005B6234 /* PAWActivityView.m in Sources */,
+				E5743F2914E30154004BBD5C /* PAWSearchRadius.m in Sources */,
+				E5743F2D14E302A0004BBD5C /* PAWCircleView.m in Sources */,
+				E554D5C314E32EFB008D027A /* PAWPost.m in Sources */,
+				65F3510316D03F0F008342B8 /* ParseCredentials.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E56E83FF14D72E1100E856AB /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E56E840014D72E1100E856AB /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		E5CAAFE914D7316F00D97A18 /* PAWWelcomeViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E5CAAFEA14D7316F00D97A18 /* en */,
+			);
+			name = PAWWelcomeViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E56E840E14D72E1100E856AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		E56E840F14D72E1100E856AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E56E841114D72E1100E856AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 87E1AB2B85CD4843BA2F39CB /* Pods.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AnyWall/AnyWall-Prefix.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = NO;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = NO;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_LABEL = NO;
+				INFOPLIST_FILE = "AnyWall/AnyWall-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		E56E841214D72E1100E856AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 87E1AB2B85CD4843BA2F39CB /* Pods.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AnyWall/AnyWall-Prefix.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = NO;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = NO;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_LABEL = NO;
+				INFOPLIST_FILE = "AnyWall/AnyWall-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		E594B25014E9AFF900B16976 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Distribution;
+		};
+		E594B25114E9AFF900B16976 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 87E1AB2B85CD4843BA2F39CB /* Pods.xcconfig */;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AnyWall/AnyWall-Prefix.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = NO;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = NO;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_LABEL = NO;
+				INFOPLIST_FILE = "AnyWall/AnyWall-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Distribution;
+		};
+		E594B25314E9B0B300B16976 /* Ad-Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Ad-Hoc";
+		};
+		E594B25414E9B0B300B16976 /* Ad-Hoc */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 87E1AB2B85CD4843BA2F39CB /* Pods.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AnyWall/AnyWall-Prefix.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = NO;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = NO;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_LABEL = NO;
+				INFOPLIST_FILE = "AnyWall/AnyWall-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Ad-Hoc";
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E56E83EC14D72E1100E856AB /* Build configuration list for PBXProject "AnyWall" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E56E840E14D72E1100E856AB /* Debug */,
+				E56E840F14D72E1100E856AB /* Release */,
+				E594B25014E9AFF900B16976 /* Distribution */,
+				E594B25314E9B0B300B16976 /* Ad-Hoc */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E56E841014D72E1100E856AB /* Build configuration list for PBXNativeTarget "AnyWall" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E56E841114D72E1100E856AB /* Debug */,
+				E56E841214D72E1100E856AB /* Release */,
+				E594B25114E9AFF900B16976 /* Distribution */,
+				E594B25414E9B0B300B16976 /* Ad-Hoc */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E56E83E914D72E1100E856AB /* Project object */;
+}

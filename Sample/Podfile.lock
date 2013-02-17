@@ -1,0 +1,18 @@
+
+PODS:
+- DRTPFObjectDynamicProperties (0.0.1):
+  - Parse (~> 1.1.29)
+- Parse (1.1.30)
+
+DEPENDENCIES:
+- DRTPFObjectDynamicProperties (from `../')
+
+EXTERNAL SOURCES:
+  DRTPFObjectDynamicProperties:
+    :local: ../
+
+SPEC CHECKSUMS:
+  DRTPFObjectDynamicProperties: d4430ba96b66ffdc42b753696186dddcc69f81a7
+  Parse: 71fa10b273197c568c8965afc5ae9941acb04df9
+
+COCOAPODS: 0.16.2
