@@ -598,6 +598,34 @@
   GHAssertEqualStrings(child.stringInParent, @"string in parent", nil);
 }
 
+- (void)testPFObjectInitWithClassNameCreatesRightClass
+{
+  PFObject *object = [[PFObject alloc] initWithClassName:@"DRTMyPFObjectSubclass"];
+
+  GHAssertEqualObjects([object class], [DRTMyPFObjectSubclass class], nil);
+}
+
+- (void)testPFObjectObjectWithClassNameCreatesRightClass
+{
+  PFObject *object = [PFObject objectWithClassName:@"DRTMyPFObjectSubclass"];
+
+  GHAssertEqualObjects([object class], [DRTMyPFObjectSubclass class], nil);
+}
+
+- (void)testPFObjectObjectWithoutDataWithClassNameObjectIdCreatesRightClass
+{
+  PFObject *object = [PFObject objectWithoutDataWithClassName:@"DRTMyPFObjectSubclass" objectId:@"fake object id"];
+
+  GHAssertEqualObjects([object class], [DRTMyPFObjectSubclass class], nil);
+}
+
+- (void)testPFObjectObjectWithClassNameDictionaryCreatesRightClass
+{
+  PFObject *object = [PFObject objectWithClassName:@"DRTMyPFObjectSubclass" dictionary:@{}];
+
+  GHAssertEqualObjects([object class], [DRTMyPFObjectSubclass class], nil);
+}
+
 @end
 
 

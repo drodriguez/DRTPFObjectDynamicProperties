@@ -274,6 +274,24 @@ static IMP DRTSetterIMPFromPropertyAttributes(BOOL isStrong, BOOL isCopy, BOOL i
       class_addMethod(metaclass, aliasSelector, class_getMethodImplementation(metaclass, aliasSelector), method_getTypeEncoding(aliasMethod));
       method_exchangeImplementations(class_getInstanceMethod(metaclass, originalSelector), class_getInstanceMethod(metaclass, aliasSelector));
     }
+
+    // These seems to be the internal initializer where we can hook in. I would
+    // have preferred initWithClassName:, since it's documented, and Parse will
+    // not change its name freely, but that method is not used when receiving
+    // objects from the network.
+    // If Parse decides to change the name of the method, or the internals of
+    // the framework, this will fail, but since it's used almost everywhere, we
+    // will notice quite fast.
+    originalSelector = @selector(initWithClassName:isPointer:);
+    aliasSelector = @selector(drt_initWithClassName:isPointer:);
+    originalMethod = class_getInstanceMethod(self, originalSelector);
+    if (originalMethod)
+    {
+      Method aliasMethod = class_getInstanceMethod(self, aliasSelector);
+      class_addMethod(self, originalSelector, class_getMethodImplementation(self, originalSelector), method_getTypeEncoding(originalMethod));
+      class_addMethod(self, aliasSelector, class_getMethodImplementation(self, aliasSelector), method_getTypeEncoding(aliasMethod));
+      method_exchangeImplementations(class_getInstanceMethod(self, originalSelector), class_getInstanceMethod(self, aliasSelector));
+    }
   }
 }
 
@@ -288,6 +306,22 @@ static IMP DRTSetterIMPFromPropertyAttributes(BOOL isStrong, BOOL isCopy, BOOL i
     [self drt_initializeDynamicProperties];
   }
 }
+
+- (id)drt_initWithClassName:(NSString *)aClassName isPointer:(BOOL)isPointer __attribute__((objc_method_family(init)))
+{
+  Class pfSubclass = NSClassFromString(aClassName);
+  if (pfSubclass != nil && [pfSubclass isSubclassOfClass:[PFObject class]])
+  {
+    self = [[pfSubclass alloc] drt_initWithClassName:aClassName isPointer:isPointer];
+  }
+  else
+  {
+    self = [self drt_initWithClassName:aClassName isPointer:isPointer];
+  }
+
+  return self;
+}
+
 
 - (id)initWithAutoClassName
 {
