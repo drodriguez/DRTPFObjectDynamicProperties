@@ -36,10 +36,10 @@ static NSUInteger const kPAWTableViewMainSection = 0;
 		// Customize the table:
 
 		// The className to query on
-		self.className = kPAWParsePostsClassKey;
+		self.className = NSStringFromClass([PAWPost class]);
 
 		// The key of the PFObject to display in the label of the default cell style
-		self.textKey = kPAWParseTextKey;
+		self.textKey = PAWPostAttributes.title;
 
 		// Whether the built-in pull-to-refresh is enabled
 		self.pullToRefreshEnabled = YES;
@@ -132,15 +132,15 @@ static NSUInteger const kPAWTableViewMainSection = 0;
 
 	// And set the query to look by location
 	PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:currentLocation.coordinate.latitude longitude:currentLocation.coordinate.longitude];
-	[query whereKey:kPAWParseLocationKey nearGeoPoint:point withinKilometers:filterDistance / kPAWMetersInAKilometer];
-	[query includeKey:kPAWParseUserKey];
+	[query whereKey:PAWPostAttributes.geopoint nearGeoPoint:point withinKilometers:filterDistance / kPAWMetersInAKilometer];
+	[query includeKey:PAWPostAttributes.user];
 
 	return query;
 }
 
 // Override to customize the look of a cell representing an object. The default is to display
 // a UITableViewCellStyleDefault style cell with the label being the first key in the object. 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PAWPost *)post {
 	static NSString *CellIdentifier = @"Cell";
 
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -151,8 +151,8 @@ static NSUInteger const kPAWTableViewMainSection = 0;
 	// Configure the cell
 	cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
 	cell.textLabel.numberOfLines = 0;
-	cell.textLabel.text = [object objectForKey:kPAWParseTextKey];
-	cell.detailTextLabel.text = [[object objectForKey:kPAWParseUserKey] objectForKey:kPAWParseUsernameKey];
+	cell.textLabel.text = post.title;
+	cell.detailTextLabel.text = post.subtitle;
 	cell.textLabel.font = [cell.textLabel.font fontWithSize:kPAWWallPostTableViewFontSize];
 
 	return cell;
@@ -185,9 +185,8 @@ static NSUInteger const kPAWTableViewMainSection = 0;
 	CGFloat rowHeight = [tableView rowHeight];
 
 	// Retrieve the text for this row:
-	PFObject *object = [self.objects objectAtIndex:indexPath.row];
-	PAWPost *postFromObject = [[PAWPost alloc] initWithPFObject:object];
-	NSString *text = postFromObject.title;
+	PAWPost *post = [self.objects objectAtIndex:indexPath.row];
+	NSString *text = post.title;
 
 	// Calculate what the frame to fit this will be:
 	CGSize theSize = [text sizeWithFont:[UIFont systemFontOfSize:kPAWWallPostTableViewFontSize] constrainedToSize:CGSizeMake(kPAWWallPostTableViewCellWidth, FLT_MAX) lineBreakMode:UILineBreakModeWordWrap];
@@ -204,11 +203,10 @@ static NSUInteger const kPAWTableViewMainSection = 0;
 
 - (void)highlightCellForPost:(PAWPost *)post {
 	// Find the cell matching this object.
-	for (PFObject *object in [self objects]) {
-		PAWPost *postFromObject = [[PAWPost alloc] initWithPFObject:object];
+	for (PAWPost *postFromObject in [self objects]) {
 		if ([post equalToPost:postFromObject]) {
 			// We found the object, scroll to the cell position where this object is.
-			NSUInteger index = [[self objects] indexOfObject:object];
+			NSUInteger index = [[self objects] indexOfObject:postFromObject];
 
 			NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:kPAWTableViewMainSection];
 			[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
@@ -231,10 +229,9 @@ static NSUInteger const kPAWTableViewMainSection = 0;
 
 - (void)unhighlightCellForPost:(PAWPost *)post {
 	// Deselect the post's row.
-	for (PFObject *object in [self objects]) {
-		PAWPost *postFromObject = [[PAWPost alloc] initWithPFObject:object];
+	for (PAWPost *postFromObject in [self objects]) {
 		if ([post equalToPost:postFromObject]) {
-			NSUInteger index = [[self objects] indexOfObject:object];
+			NSUInteger index = [[self objects] indexOfObject:postFromObject];
 			NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
 			[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 

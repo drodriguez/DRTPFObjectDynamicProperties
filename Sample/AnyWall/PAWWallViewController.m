@@ -71,7 +71,7 @@
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	if (self) {
 		self.title = @"AnyWall";
-		self.className = kPAWParsePostsClassKey;
+		self.className = NSStringFromClass([PAWPost class]);
 		annotations = [[NSMutableArray alloc] initWithCapacity:10];
 		allPosts = [[NSMutableArray alloc] initWithCapacity:10];
 	}
@@ -401,8 +401,8 @@
 
 	// Query for posts sort of kind of near our current location.
 	PFGeoPoint *point = [PFGeoPoint geoPointWithLatitude:currentLocation.coordinate.latitude longitude:currentLocation.coordinate.longitude];
-	[query whereKey:kPAWParseLocationKey nearGeoPoint:point withinKilometers:kPAWWallPostMaximumSearchDistance];
-	[query includeKey:kPAWParseUserKey];
+	[query whereKey:PAWPostAttributes.geopoint nearGeoPoint:point withinKilometers:kPAWWallPostMaximumSearchDistance];
+	[query includeKey:PAWPostAttributes.user];
 	query.limit = kPAWWallPostsSearch;
 
 	[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -418,8 +418,7 @@
 			NSMutableArray *newPosts = [[NSMutableArray alloc] initWithCapacity:kPAWWallPostsSearch];
 			// (Cache the objects we make for the search in step 2:)
 			NSMutableArray *allNewPosts = [[NSMutableArray alloc] initWithCapacity:kPAWWallPostsSearch];
-			for (PFObject *object in objects) {
-				PAWPost *newPost = [[PAWPost alloc] initWithPFObject:object];
+			for (PAWPost *newPost in objects) {
 				[allNewPosts addObject:newPost];
 				BOOL found = NO;
 				for (PAWPost *currentPost in allPosts) {
@@ -454,7 +453,7 @@
 				CLLocation *objectLocation = [[CLLocation alloc] initWithLatitude:newPost.coordinate.latitude longitude:newPost.coordinate.longitude];
 				// if this post is outside the filter distance, don't show the regular callout.
 				CLLocationDistance distanceFromCurrent = [currentLocation distanceFromLocation:objectLocation];
-				[newPost setTitleAndSubtitleOutsideDistance:( distanceFromCurrent > nearbyDistance ? YES : NO )];
+				[newPost setTitleAndSubtitleOutsideDistance:distanceFromCurrent > nearbyDistance];
 				// Animate all pins after the initial load:
 				newPost.animatesDrop = mapPinsPlaced;
 			}

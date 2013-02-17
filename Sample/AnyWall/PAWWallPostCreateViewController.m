@@ -9,6 +9,7 @@
 #import "PAWWallPostCreateViewController.h"
 
 #import "PAWAppDelegate.h"
+#import "PAWPost.h"
 #import <Parse/Parse.h>
 
 @interface PAWWallPostCreateViewController ()
@@ -95,16 +96,17 @@
 	PFUser *user = [PFUser currentUser];
 
 	// Stitch together a postObject and send this async to Parse
-	PFObject *postObject = [PFObject objectWithClassName:kPAWParsePostsClassKey];
-	[postObject setObject:textView.text forKey:kPAWParseTextKey];
-	[postObject setObject:user forKey:kPAWParseUserKey];
-	[postObject setObject:currentPoint forKey:kPAWParseLocationKey];
+	PAWPost *post = [[PAWPost alloc] init];
+	post.title = textView.text;
+	post.subtitle = user.username;
+	post.user = user;
+	post.geopoint = currentPoint;
 	// Use PFACL to restrict future modifications to this object.
 	PFACL *readOnlyACL = [PFACL ACL];
 	[readOnlyACL setPublicReadAccess:YES];
 	[readOnlyACL setPublicWriteAccess:NO];
-	[postObject setACL:readOnlyACL];
-	[postObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+	[post setACL:readOnlyACL];
+	[post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
 		if (error) {
 			NSLog(@"Couldn't save!");
 			NSLog(@"%@", error);
@@ -114,7 +116,7 @@
 		}
 		if (succeeded) {
 			NSLog(@"Successfully saved!");
-			NSLog(@"%@", postObject);
+			NSLog(@"%@", post);
 			dispatch_async(dispatch_get_main_queue(), ^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:kPAWPostCreatedNotification object:nil];
 			});

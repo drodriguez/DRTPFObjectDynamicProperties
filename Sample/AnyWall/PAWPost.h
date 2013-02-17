@@ -10,7 +10,15 @@
 #import <MapKit/MapKit.h>
 #import <Parse/Parse.h>
 
-@interface PAWPost : NSObject <MKAnnotation>
+extern struct PAWPostAttributes {
+	__unsafe_unretained NSString *title;
+	__unsafe_unretained NSString *subtitle;
+	__unsafe_unretained NSString *geopoint;
+	__unsafe_unretained NSString *user;
+	__unsafe_unretained NSString *coordinate;
+} PAWPostAttributes;
+
+@interface PAWPost : PFObject <MKAnnotation>
 
 //@protocol MKAnnotation <NSObject>
 
@@ -20,20 +28,16 @@
 
 // @optional
 // Title and subtitle for use by selection UI.
-@property (nonatomic, readonly, copy) NSString *title;
-@property (nonatomic, readonly, copy) NSString *subtitle;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *subtitle;
 // @end
 
 // Other properties:
-@property (nonatomic, readonly, strong) PFObject *object;
-@property (nonatomic, readonly, strong) PFGeoPoint *geopoint;
-@property (nonatomic, readonly, strong) PFUser *user;
+@property (nonatomic, strong) PFGeoPoint *geopoint;
+@property (nonatomic, strong) PFUser *user;
 @property (nonatomic, assign) BOOL animatesDrop;
 @property (nonatomic, readonly) MKPinAnnotationColor pinColor;
 
-// Designated initializer.
-- (id)initWithCoordinate:(CLLocationCoordinate2D)coordinate andTitle:(NSString *)title andSubtitle:(NSString *)subtitle;
-- (id)initWithPFObject:(PFObject *)object;
 - (BOOL)equalToPost:(PAWPost *)aPost;
 
 - (void)setTitleAndSubtitleOutsideDistance:(BOOL)outside;
